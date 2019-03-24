@@ -1,0 +1,17 @@
+#register {
+    max-width: 280px;
+    margin-left:auto;
+    margin-right: auto;
+    margin-top:100px;
+}
+
+#register>*{
+    margin-bottom: 20px;
+}
+
+#register>button{
+    width:100%;
+}
+#register>h1 {
+    text-align: center;
+}

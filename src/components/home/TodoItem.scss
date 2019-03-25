@@ -1,0 +1,25 @@
+.item {
+    padding: 5px 3px;
+    border-top:1px solid #fff;
+    display: flex;
+    justify-content: space-between;
+
+    .enter {
+        margin-right:5px;
+    }
+
+    .input {
+        border:none;
+        outline: none;
+    }
+
+}
+
+.item.editing {
+    border-top-color:#F7EDB8;
+    background-color: #FFF4D0;
+    
+    .input {
+        margin-left:8px;
+    }
+}

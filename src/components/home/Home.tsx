@@ -79,6 +79,10 @@ export default class Home extends React.Component<{},IState> {
              .then((res)=>{
                 console.log('add todo success..')
                 console.log(res)
+                const newTodos = [res.data.resource,...this.state.todos]
+                this.setState({
+                    todos:newTodos
+                })
              })
              .catch((error)=>{
                  console.log('add todo request error...')
@@ -93,7 +97,7 @@ export default class Home extends React.Component<{},IState> {
             <div id='home'>
                 <Header account = {this.state.user.account} onClickHandle={(e:any)=>this.headerClickHandle(e)} />
                 <main>
-                    <Todos addTodo={(item:string)=>this.addTodo(item)} />
+                    <Todos todos={this.state.todos} addTodo={(item:string)=>this.addTodo(item)} />
                 </main>
             </div>
         )

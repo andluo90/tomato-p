@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {Button,Input,Icon} from 'antd'
+import {Button,Input,Icon,Spin} from 'antd'
 
 
 import axios from '../../config/axios'
@@ -15,6 +15,7 @@ interface IState {
     password:string,
     password_confirmation:string,
     IsRegisterSuccess:boolean,
+    loading:boolean
     [x:string]:any
 }
 
@@ -27,7 +28,8 @@ export default class Register extends React.Component<{},IState> {
             account:'',
             password:'',
             password_confirmation:'',
-            IsRegisterSuccess:false
+            IsRegisterSuccess:false,
+            loading:false
         }
 
         this.submit = this.submit.bind(this)
@@ -46,6 +48,9 @@ export default class Register extends React.Component<{},IState> {
     }
 
     submit(){
+        this.setState({
+            loading:true
+        })
         console.log("开始注册...")
         axios.post('sign_up/user',{
             account:this.state.account,
@@ -90,7 +95,9 @@ export default class Register extends React.Component<{},IState> {
                     value={this.state.password_confirmation}
                     onChange={(e)=>{this.onChangeInput('password_confirmation',e.target.value)}}
                  />
-                <Button type='primary' onClick={this.submit}>注册</Button>
+                <Spin spinning={this.state.loading}>
+                    <Button type='primary' onClick={this.submit}>注册</Button>
+                </Spin>
                 <span>Or <Link to='/login'>立即登录</Link></span>
             </div>
         )

@@ -10,7 +10,8 @@ import Header from './Header'
 import {Todos} from './Todos'
 
 interface IState {
-    [x:string]:any
+    user:any;
+    todos:object[];
 }
 
 
@@ -19,32 +20,46 @@ export default class Home extends React.Component<{},IState> {
     constructor(props:any){
         super(props)
         this.state= {
-            user:''
+            user:'',
+            todos:[]
         }
     }
 
-    componentWillMount(){
-        axios.get('me')
-             .then((res:any)=>{
-                 console.log(`get me success`)
-                 this.setState({
-                     user:res.data
-                 })
-             }).then(()=>{
-                 axios.get('todos')
-             }).then((res:any)=>{
-                 console.log(   `get totods success`)
-                 console.log(res)
-             })
-             .catch((error:any)=>{
-                 if (error.response.status === 401){
-                     console.log("401:未授权")
-                 }else {
-                    console.log('get me error...')
-                    console.log(error)
+    async componentWillMount(){
+        await this.getMe()
+        await this.getTodos()
+                
+    }
 
-                 }
-             })
+    async getMe(){
+        // 获取个人信息
+        try {
+            const res = await axios.get('me')
+            console.log(`get me success`)
+            this.setState({
+                user:res.data
+            })         
+        } catch (error) {
+            console.log(`get me error`)
+            console.log(error)
+        }
+    }
+
+    async getTodos(){
+        // 获取待办任务列表
+        try {
+            const res = await axios.get('todos')
+            console.log(`get todos success..`)
+            console.log(res)
+            const newTodos = res.data.resources
+            this.setState({
+                todos:newTodos
+            })
+            console.log(newTodos)
+        } catch (error) {
+            console.log('get todos error')
+            console.log(error)
+        }
         
     }
 

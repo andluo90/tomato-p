@@ -16,6 +16,7 @@ interface IProps {
 
 interface IState {
     description:string
+    checked:boolean
     
 }
 
@@ -27,15 +28,23 @@ class TodoItem extends React.Component<IProps,IState>{
         super(props)
         this.state = {
             description:this.props.item.description,
+            checked:this.props.item.completed
         }
     }
 
-    change(e:CheckboxChangeEvent){
+    check = (e:CheckboxChangeEvent)=>{
         console.log(`checked = ${e.target.checked}`)
+        if(e.target.checked){
+            this.setState({
+                checked:true
+            })
+            this.updateTodo({completed:true})
+        }
+
     }
 
     handleClick = (e:React.MouseEvent)=>{
-        this.updateTodo()
+        this.updateTodo({})
     }
 
     handleDoubleClick(){
@@ -57,12 +66,12 @@ class TodoItem extends React.Component<IProps,IState>{
     keyUp = (e:any)=>{
         
         if( e.keyCode === 13 ){
-            this.updateTodo()
+            this.updateTodo({description:this.state.description})
         }
     }
 
-    updateTodo = ()=>{
-        axios.put(`todos/${this.props.item.id}`,{...this.props.item,description:this.state.description})
+    updateTodo = (propety:object)=>{
+        axios.put(`todos/${this.props.item.id}`,{...this.props.item,...propety})
         .then((res)=>{
             console.log(res)
             this.props.updataEditingId(-1)
@@ -78,7 +87,7 @@ class TodoItem extends React.Component<IProps,IState>{
         const item = (
             <div className={itemClassName} onDoubleClick={()=>{this.handleDoubleClick()}}>
                 <div>
-                    <Checkbox onChange={(e:CheckboxChangeEvent)=>this.change(e)} />
+                    <Checkbox checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
                     {this.props.IsEditing?(<input className='input' value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />):(<span >{this.state.description}</span>)}
                 </div>
                 <div>

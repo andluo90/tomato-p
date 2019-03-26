@@ -5,7 +5,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 14.4px;
-    
+
     .enter {
         margin-right:5px;
     }
@@ -25,4 +25,9 @@
     .input {
         margin-left:8px;
     }
+}
+
+.item.deleted {
+    text-decoration: line-through;
+    color:#dddddd
 }

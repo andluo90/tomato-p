@@ -17,6 +17,7 @@ interface IProps {
 interface IState {
     description:string
     checked:boolean
+    deleted:boolean
     
 }
 
@@ -28,7 +29,8 @@ class TodoItem extends React.Component<IProps,IState>{
         super(props)
         this.state = {
             description:this.props.item.description,
-            checked:this.props.item.completed
+            checked:this.props.item.completed,
+            deleted:this.props.item.deleted
         }
     }
 
@@ -53,8 +55,9 @@ class TodoItem extends React.Component<IProps,IState>{
         }
     }
 
-    delete(e:React.MouseEvent){
-        console.log('to be done...')
+    delete = (e:React.MouseEvent)=>{
+        this.setState({deleted:true})
+        this.updateTodo({deleted:true})
     }
 
     onInputChange(e:React.ChangeEvent<HTMLInputElement>){
@@ -83,7 +86,7 @@ class TodoItem extends React.Component<IProps,IState>{
     }
 
     render(){
-        const itemClassName = `item ${this.props.IsEditing?'editing':''}`
+        const itemClassName = `item ${this.props.IsEditing?'editing':''} ${this.state.deleted?'deleted':''}`
         const item = (
             <div className={itemClassName} onDoubleClick={()=>{this.handleDoubleClick()}}>
                 <div>

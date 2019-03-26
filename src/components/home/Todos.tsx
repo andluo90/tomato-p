@@ -30,10 +30,11 @@ class Todos extends React.Component<IProps,IState> {
 
     onKeyUp(e:React.KeyboardEvent){
         // 添加新任务回车事件
-        const {taskName} = this.state
-        if(taskName === ''){
-            message.warning('任务名不能为空!',2)   
-        }else if (e.keyCode === 13){
+        if (e.keyCode === 13){
+            const {taskName} = this.state
+            if(taskName === ''){
+                message.warning('任务名不能为空!',2)
+            }
             this.handleAddTodo(taskName)
         }
     }
@@ -61,7 +62,7 @@ class Todos extends React.Component<IProps,IState> {
         const { taskName } = this.state;
         return (
             <div id='todos'>
-                <Input
+                <Input size='large'
                     placeholder="添加新任务"
                     suffix = {<Icon type='enter' onClick={(e:React.MouseEvent)=>this.handleClick(e)} />}
                     value={taskName}

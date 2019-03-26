@@ -8,10 +8,12 @@ import './Home.scss'
 
 import Header from './Header'
 import {Todos} from './Todos'
+import {TodoItem} from './TodoItem'
 
 interface IState {
     user:any;
     todos:object[];
+    updataingTodoId:number
 }
 
 
@@ -21,7 +23,8 @@ export default class Home extends React.Component<{},IState> {
         super(props)
         this.state= {
             user:'',
-            todos:[]
+            todos:[],
+            updataingTodoId:-1
         }
     }
 
@@ -91,13 +94,26 @@ export default class Home extends React.Component<{},IState> {
         
     }
 
+    updataEditingId = (id:number):void=>{
+        this.setState({
+            updataingTodoId:id
+        })
+    }
+
     render(){
         
         return (
             <div id='home'>
                 <Header account = {this.state.user.account} onClickHandle={(e:any)=>this.headerClickHandle(e)} />
                 <main>
-                    <Todos todos={this.state.todos} addTodo={(item:string)=>this.addTodo(item)} />
+                    <Todos addTodo={(item:string)=>this.addTodo(item)}>
+                        {this.state.todos.map((item:any)=>{
+                            if(this.state.updataingTodoId === item.id){
+                                return (<TodoItem key={item.id} item={item} IsEditing={true} updataEditingId={this.updataEditingId} />)
+                            }
+                            return (<TodoItem key={item.id} item={item} IsEditing={false} updataEditingId={(id:number)=>this.updataEditingId(id)} />)
+                        })}
+                    </Todos>
                 </main>
             </div>
         )

@@ -2,7 +2,6 @@ import * as React from 'react'
 
 import {Input,Icon,message} from 'antd'
 
-import {TodoItem} from './TodoItem'
 
 import './Todos.scss'
 
@@ -12,7 +11,6 @@ interface IState {
 
 interface IProps {
     addTodo:any
-    todos:object[]
 }
 
 class Todos extends React.Component<IProps,IState> {
@@ -70,9 +68,7 @@ class Todos extends React.Component<IProps,IState> {
                     onChange={(e:React.ChangeEvent<HTMLInputElement>)=>this.onChange(e)}
                     onKeyUp={(e:React.KeyboardEvent) =>this.onKeyUp(e)}
                 />
-                {this.props.todos.map((item:any)=>{
-                    return (<TodoItem key={item.id} description={item.description} />)
-                })}
+                {this.props.children}
             </div>
         )
     }

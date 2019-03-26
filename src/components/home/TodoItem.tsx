@@ -76,11 +76,11 @@ class TodoItem extends React.Component<IProps,IState>{
     }
 
     updateTodo = (propety:object)=>{
-        
+
+        this.props.updataEditingId(-1)
         axios.put(`todos/${this.props.item.id}`,{...this.props.item,...propety})
         .then((res)=>{
             console.log(res)
-            this.props.updataEditingId(-1)
         })
         .catch((error)=>{
             console.log('put error...')

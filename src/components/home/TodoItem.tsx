@@ -96,7 +96,7 @@ class TodoItem extends React.Component<IProps,IState>{
                     <Checkbox disabled={this.state.deleted} checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
                     {this.props.IsEditing?(<input className='input' value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />):(<span >{this.state.description}</span>)}
                 </div>
-                <div>
+                <div className='right'>
                     <Icon className='enter' type='enter' onClick={(e:React.MouseEvent)=>this.handleClick(e)} />
                     <Icon type="delete" onClick={(e:React.MouseEvent)=>this.delete(e)} />
                 </div>

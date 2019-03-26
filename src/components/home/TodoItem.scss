@@ -8,6 +8,7 @@
 
     .left {
         flex-grow: 1;
+
     }
 
     .right {
@@ -40,6 +41,7 @@
     
     .input {
         margin-left:8px;
+        width:calc(100% - 30px)
     }
 }
 

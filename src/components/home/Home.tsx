@@ -78,11 +78,18 @@ export default class Home extends React.Component<{},IState> {
     }
 
     addTodo(item:string){
+        // 先添加到页面再作渲染，提高页面响应
+        const tmp = [...this.state.todos]
+        let newTodos = [{description:item},...this.state.todos]
+        this.setState({
+            todos:newTodos
+        })
+
         axios.post('todos',{description:item})
              .then((res)=>{
                 console.log('add todo success..')
                 console.log(res)
-                const newTodos = [res.data.resource,...this.state.todos]
+                newTodos = [res.data.resource,...tmp]
                 this.setState({
                     todos:newTodos
                 })

@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {Checkbox,Icon} from 'antd'
+import {Checkbox,Icon,message} from 'antd'
 
 import axios from '../../config/axios'
 
@@ -46,6 +46,7 @@ class TodoItem extends React.Component<IProps,IState>{
     }
 
     handleClick = (e:React.MouseEvent)=>{
+        message.info('更新任务成功!',2)
         this.updateTodo({})
     }
 
@@ -69,11 +70,13 @@ class TodoItem extends React.Component<IProps,IState>{
     keyUp = (e:any)=>{
         
         if( e.keyCode === 13 ){
+            message.info('更新任务成功!',2)
             this.updateTodo({description:this.state.description})
         }
     }
 
     updateTodo = (propety:object)=>{
+        
         axios.put(`todos/${this.props.item.id}`,{...this.props.item,...propety})
         .then((res)=>{
             console.log(res)
@@ -89,7 +92,7 @@ class TodoItem extends React.Component<IProps,IState>{
         const itemClassName = `item ${this.props.IsEditing?'editing':''} ${this.state.deleted?'deleted':''}`
         const item = (
             <div className={itemClassName} onDoubleClick={()=>{this.handleDoubleClick()}}>
-                <div>
+                <div className='left'>
                     <Checkbox disabled={this.state.deleted} checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
                     {this.props.IsEditing?(<input className='input' value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />):(<span >{this.state.description}</span>)}
                 </div>

@@ -69,6 +69,7 @@ class TodoItem extends React.Component<IProps,IState>{
     }
 
     delete = (e:React.MouseEvent)=>{
+        message.info('删除任务成功！',2)
         this.setState({deleted:true})
         this.updateTodo({deleted:true})
     }

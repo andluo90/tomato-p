@@ -28,6 +28,10 @@ export default class Home extends React.Component<{},IState> {
         }
     }
 
+    get unDeletedTodos(){
+        return this.state.todos.filter((item:any)=>!item.deleted)
+    }
+
     async componentWillMount(){
         await this.getMe()
         await this.getTodos()
@@ -114,7 +118,7 @@ export default class Home extends React.Component<{},IState> {
                 <Header account = {this.state.user.account} onClickHandle={(e:any)=>this.headerClickHandle(e)} />
                 <main>
                     <Todos addTodo={(item:string)=>this.addTodo(item)}>
-                        {this.state.todos.map((item:any)=>{
+                        {this.unDeletedTodos.map((item:any)=>{
                             if(this.state.updataingTodoId === item.id){
                                 return (<TodoItem key={item.id} item={item} IsEditing={true} updataEditingId={this.updataEditingId} />)
                             }

@@ -102,11 +102,14 @@ class TodoItem extends React.Component<IProps,IState>{
     }
 
     render(){
-        const itemClassName = `item ${this.props.IsEditing?'editing':''} ${this.state.deleted?'deleted':''}`
+        if(this.state.deleted || this.state.checked){
+            return ''
+        }
+        const itemClassName = `item ${this.props.IsEditing?'editing':''}`
         const item = (
             <div className={itemClassName} onDoubleClick={()=>{this.handleDoubleClick()}}>
                 <div className='left'>
-                    <Checkbox disabled={this.state.deleted} checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
+                    <Checkbox checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
                     {this.props.IsEditing?(<input className='input' ref={this.textInput} value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />):(<span >{this.state.description}</span>)}
                 </div>
                 <div className='right'>

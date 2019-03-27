@@ -32,6 +32,14 @@ export default class Home extends React.Component<{},IState> {
         return this.state.todos.filter((item:any)=>!item.deleted)
     }
 
+    get completedTodos(){
+        return this.unDeletedTodos.filter((item:any)=>item.completed)
+    }
+
+    get unCompletedTodos(){
+        return this.unDeletedTodos.filter((item:any)=>!item.completed)
+    }
+
     async componentWillMount(){
         await this.getMe()
         await this.getTodos()
@@ -111,6 +119,8 @@ export default class Home extends React.Component<{},IState> {
         })
     }
 
+    
+
     render(){
         
         return (
@@ -118,7 +128,13 @@ export default class Home extends React.Component<{},IState> {
                 <Header account = {this.state.user.account} onClickHandle={(e:any)=>this.headerClickHandle(e)} />
                 <main>
                     <Todos addTodo={(item:string)=>this.addTodo(item)}>
-                        {this.unDeletedTodos.map((item:any)=>{
+                        {this.unCompletedTodos.map((item:any)=>{
+                            if(this.state.updataingTodoId === item.id){
+                                return (<TodoItem key={item.id} item={item} IsEditing={true} updataEditingId={this.updataEditingId} />)
+                            }
+                            return (<TodoItem key={item.id} item={item} IsEditing={false} updataEditingId={(id:number)=>this.updataEditingId(id)} />)
+                        })}
+                        {this.completedTodos.map((item:any)=>{
                             if(this.state.updataingTodoId === item.id){
                                 return (<TodoItem key={item.id} item={item} IsEditing={true} updataEditingId={this.updataEditingId} />)
                             }

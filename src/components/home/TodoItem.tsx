@@ -25,14 +25,26 @@ interface IState {
 
 class TodoItem extends React.Component<IProps,IState>{
 
+    private textInput:React.RefObject<HTMLInputElement>
+
     constructor(props:any){
         super(props)
+        this.textInput = React.createRef();
         this.state = {
             description:this.props.item.description,
             checked:this.props.item.completed,
             deleted:this.props.item.deleted
         }
     }
+
+
+    componentDidUpdate(){
+        // input输入框自动focus
+        if(this.textInput.current !== null){
+            this.textInput.current.focus();
+        }
+    }
+
 
     check = (e:CheckboxChangeEvent)=>{
         console.log(`checked = ${e.target.checked}`)
@@ -94,7 +106,7 @@ class TodoItem extends React.Component<IProps,IState>{
             <div className={itemClassName} onDoubleClick={()=>{this.handleDoubleClick()}}>
                 <div className='left'>
                     <Checkbox disabled={this.state.deleted} checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
-                    {this.props.IsEditing?(<input className='input' value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />):(<span >{this.state.description}</span>)}
+                    {this.props.IsEditing?(<input className='input' ref={this.textInput} value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />):(<span >{this.state.description}</span>)}
                 </div>
                 <div className='right'>
                     <Icon className='enter' type='enter' onClick={(e:React.MouseEvent)=>this.handleClick(e)} />

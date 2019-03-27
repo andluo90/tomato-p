@@ -101,21 +101,46 @@ class TodoItem extends React.Component<IProps,IState>{
         })
     }
 
+    handleEsc(e:React.KeyboardEvent<HTMLDivElement>){
+        if(this.props.IsEditing && e.keyCode === 27){
+            this.props.updataEditingId(-1)
+        }
+    }
+
     render(){
         if(this.state.deleted || this.state.checked){
             return ''
         }
-        const itemClassName = `item ${this.props.IsEditing?'editing':''}`
-        const item = (
-            <div className={itemClassName} onDoubleClick={()=>{this.handleDoubleClick()}}>
+        let leftElement = null
+        let rightElement = null
+        if(this.props.IsEditing){
+            leftElement = (
                 <div className='left'>
                     <Checkbox checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
-                    {this.props.IsEditing?(<input className='input' ref={this.textInput} value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />):(<span >{this.state.description}</span>)}
+                    <input className='input' ref={this.textInput} value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />
                 </div>
+            )
+            rightElement = (
                 <div className='right'>
                     <Icon className='enter' type='enter' onClick={(e:React.MouseEvent)=>this.handleClick(e)} />
                     <Icon type="delete" onClick={(e:React.MouseEvent)=>this.delete(e)} />
+                </div>)
+        }else{
+            leftElement = (
+                <div className='left'>
+                    <Checkbox checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
+                    <span >{this.state.description}</span>
                 </div>
+            )
+            rightElement = (
+                <div className='right' />
+            )
+        }
+        const itemClassName = `item ${this.props.IsEditing?'editing':''}`
+        const item = (
+            <div className={itemClassName} onDoubleClick={()=>{this.handleDoubleClick()}} onKeyUp={(e:React.KeyboardEvent<HTMLDivElement>)=>this.handleEsc(e)}>
+                {leftElement}
+                {rightElement}
             </div>
         )
         

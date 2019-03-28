@@ -2,8 +2,6 @@ import * as React from 'react'
 
 import axios from '../../config/axios'
 
-import {message} from 'antd'
-
 import './Home.scss'
 
 import Header from './Header'
@@ -78,16 +76,7 @@ export default class Home extends React.Component<{},IState> {
         
     }
 
-    headerClickHandle(e:any){
-        if(e.key === '2'){
-            localStorage.setItem('x-token','')
-            this.setState({user:''})
-            message.info('退出成功.',2);
-            console.log('click left button', e);
-        }else if(e.key === '1'){
-            message.warn('该功能暂未实现',2);
-        }
-    }
+
 
     addTodo(item:string){
         // 先添加到页面再作渲染，提高页面响应
@@ -125,7 +114,7 @@ export default class Home extends React.Component<{},IState> {
         
         return (
             <div id='home'>
-                <Header account = {this.state.user.account} onClickHandle={(e:any)=>this.headerClickHandle(e)} />
+                <Header />
                 <main>
                     <Todos addTodo={(item:string)=>this.addTodo(item)}>
                         {this.unCompletedTodos.map((item:any)=>{

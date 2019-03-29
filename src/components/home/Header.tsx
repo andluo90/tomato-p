@@ -2,7 +2,8 @@ import * as React from 'react'
 
 import {Link} from 'react-router-dom'
 
-import {logoutAction,getLoginInfoAction} from '../../redux/actions'
+import axios from '../../config/axios'
+
 import {connect} from 'react-redux'
 import { Menu, Dropdown, Button, Icon , message } from 'antd';
 
@@ -10,7 +11,7 @@ import { Menu, Dropdown, Button, Icon , message } from 'antd';
 interface IProps {
     account:string
     logout:any
-    getLoginInfo:any
+    setUserInfo:any
 }
 
 class Header extends React.Component<IProps>{
@@ -27,21 +28,32 @@ class Header extends React.Component<IProps>{
     }
 
     componentDidMount(){
-        this.props.getLoginInfo()
+        this.getLoginInfo()
+    }
+
+    getLoginInfo(){
+        axios.get('me')
+             .then((res:any)=>{
+                this.props.setUserInfo(res.data.account)
+             })
+             .catch((error)=>{
+                 console.log('get me error')
+                 console.log(error)
+             })
     }
 
     render(){
         const {account} = this.props
 
         const menu = (
-            <Menu onClick={this.handleClick}>
+            <Menu onClick={(e)=>this.handleClick(e)}>
               <Menu.Item key="1"><Icon type="user" />账号设置</Menu.Item>
               <Menu.Item key="2" ><Icon type="logout" />退出</Menu.Item>
             </Menu>
         );
 
         let btn;
-        if (account === undefined){
+        if (account === undefined || account === ''){
             btn = (<Link to='/login'><Button>登录</Button></Link>)
         }else {
             btn = (
@@ -52,6 +64,7 @@ class Header extends React.Component<IProps>{
                 </Dropdown>
             )
         }
+    
         return (
             <header>
                 <div className='logo'>番茄土豆</div>
@@ -63,6 +76,7 @@ class Header extends React.Component<IProps>{
 }
 
 function mapStateToProps(state:any){
+    console.log("map state to props...")
     return {
         account:state.account
     }
@@ -70,9 +84,25 @@ function mapStateToProps(state:any){
 
 function mapDispatchToProps(dispatch:any){
     return {
-        logout:()=>dispatch(logoutAction),
-        getLoginInfo:()=>dispatch(getLoginInfoAction)
+        logout:()=>dispatch(logoutAction()),
+        setUserInfo:(account:any)=>{
+            dispatch(setUserInfoAction(account))
+        }
     }
 }
+
+function logoutAction(){
+    return {
+        type:'logout'
+    }
+}
+
+function setUserInfoAction(account:string){
+    return {
+        type:'setUserInfo',
+        payload:account
+    }
+}
+
 
 export default connect(mapStateToProps,mapDispatchToProps)(Header)

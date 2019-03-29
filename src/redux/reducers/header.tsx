@@ -1,21 +1,14 @@
-import axios from '../../config/axios'
 
-const initState = {
-    account:''
-}
 
-export default function(state=initState,action:any){
+export default function(state={account:''},action:any){
     switch(action.type){
         case 'logout':{
-            const newState = {account:'',...state}
+            const newState = {account:''}
             return newState
         }
-        case 'getLoginInfo':{
+        case 'setUserInfo':{
+            return {account:action.payload}
             
-            axios.get('me')
-                 .then((res:any)=>{
-                    return {account:res.data.account,...state}         
-                 })
         }
         default:
             return state

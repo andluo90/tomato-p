@@ -12,6 +12,7 @@ import Register from './components/register/Register'
 
 class App extends React.Component {
   public render() {
+
     return (
       <Provider store={store}>
           <Router>
@@ -25,6 +26,7 @@ class App extends React.Component {
     )
   }
 }
+
 
 
 export default App;

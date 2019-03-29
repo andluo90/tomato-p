@@ -9,7 +9,6 @@ import {Todos} from './Todos'
 import {TodoItem} from './TodoItem'
 
 interface IState {
-    user:any;
     todos:object[];
     updataingTodoId:number
 }
@@ -20,7 +19,6 @@ export default class Home extends React.Component<{},IState> {
     constructor(props:any){
         super(props)
         this.state= {
-            user:'',
             todos:[],
             updataingTodoId:-1
         }
@@ -39,24 +37,11 @@ export default class Home extends React.Component<{},IState> {
     }
 
     async componentWillMount(){
-        await this.getMe()
         await this.getTodos()
                 
     }
 
-    async getMe(){
-        // 获取个人信息
-        try {
-            const res = await axios.get('me')
-            console.log(`get me success`)
-            this.setState({
-                user:res.data
-            })         
-        } catch (error) {
-            console.log(`get me error`)
-            console.log(error)
-        }
-    }
+
 
     async getTodos(){
         // 获取待办任务列表

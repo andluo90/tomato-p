@@ -2,30 +2,29 @@ import * as React from 'react'
 
 import axios from '../../config/axios'
 
+import {updateTodosAction,setEditingIdAction} from '../../redux/actions'
+
+import {connect} from 'react-redux'
+
 import './Home.scss'
 
 import Header from './Header'
 import {Todos} from './Todos'
 import {TodoItem} from './TodoItem'
 
-interface IState {
-    todos:object[];
+interface IProps {
+    todos:object[]
     updataingTodoId:number
+    updateTodos:any
+    setEditingId:any
 }
 
 
-export default class Home extends React.Component<{},IState> {
+class Home extends React.Component<IProps,{}> {
 
-    constructor(props:any){
-        super(props)
-        this.state= {
-            todos:[],
-            updataingTodoId:-1
-        }
-    }
 
     get unDeletedTodos(){
-        return this.state.todos.filter((item:any)=>!item.deleted)
+        return this.props.todos.filter((item:any)=>!item.deleted)
     }
 
     get completedTodos(){
@@ -50,9 +49,7 @@ export default class Home extends React.Component<{},IState> {
             console.log(`get todos success..`)
             console.log(res)
             const newTodos = res.data.resources
-            this.setState({
-                todos:newTodos
-            })
+            this.props.updateTodos(newTodos)
             console.log(newTodos)
         } catch (error) {
             console.log('get todos error')
@@ -65,20 +62,18 @@ export default class Home extends React.Component<{},IState> {
 
     addTodo(item:string){
         // 先添加到页面再作渲染，提高页面响应
-        const tmp = [...this.state.todos]
-        let newTodos = [{description:item},...this.state.todos]
-        this.setState({
-            todos:newTodos
-        })
+        const tmp = [...this.props.todos]
+        let newTodos = [{description:item},...this.props.todos]
+        this.props.updateTodos(newTodos)
+        
 
         axios.post('todos',{description:item})
              .then((res)=>{
                 console.log('add todo success..')
                 console.log(res)
                 newTodos = [res.data.resource,...tmp]
-                this.setState({
-                    todos:newTodos
-                })
+                this.props.updateTodos(newTodos)
+                
              })
              .catch((error)=>{
                  console.log('add todo request error...')
@@ -88,9 +83,7 @@ export default class Home extends React.Component<{},IState> {
     }
 
     updataEditingId = (id:number):void=>{
-        this.setState({
-            updataingTodoId:id
-        })
+        this.props.setEditingId(id)
     }
 
     
@@ -103,13 +96,13 @@ export default class Home extends React.Component<{},IState> {
                 <main>
                     <Todos addTodo={(item:string)=>this.addTodo(item)}>
                         {this.unCompletedTodos.map((item:any)=>{
-                            if(this.state.updataingTodoId === item.id){
+                            if(this.props.updataingTodoId === item.id){
                                 return (<TodoItem key={item.id} item={item} IsEditing={true} updataEditingId={this.updataEditingId} />)
                             }
                             return (<TodoItem key={item.id} item={item} IsEditing={false} updataEditingId={(id:number)=>this.updataEditingId(id)} />)
                         })}
                         {this.completedTodos.map((item:any)=>{
-                            if(this.state.updataingTodoId === item.id){
+                            if(this.props.updataingTodoId === item.id){
                                 return (<TodoItem key={item.id} item={item} IsEditing={true} updataEditingId={this.updataEditingId} />)
                             }
                             return (<TodoItem key={item.id} item={item} IsEditing={false} updataEditingId={(id:number)=>this.updataEditingId(id)} />)
@@ -121,3 +114,20 @@ export default class Home extends React.Component<{},IState> {
     }
 
 }
+
+
+function mapStateToProps(state:any){
+    return {
+        todos:state.home.todos,
+        updataingTodoId:state.home.updataingTodoId
+    }
+}
+
+function mapDispatchToProps(dispatch:any){
+    return {
+        updateTodos:(todos:object[])=> dispatch(updateTodosAction(todos)),
+        setEditingId:(id:number)=> dispatch(setEditingIdAction(id))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Home)

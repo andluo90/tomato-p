@@ -6,3 +6,17 @@ export const logoutAction = {
 export const getLoginInfoAction = {
     type:'getLoginInfo'
 }
+
+export const updateTodosAction = (todos:object[])=>{
+    return {
+        type:'updateTodos',
+        payload:todos
+    }
+}
+
+export const setEditingIdAction = (id:number)=>{
+    return {
+        type:'setEditingId',
+        payload:id
+    }
+}

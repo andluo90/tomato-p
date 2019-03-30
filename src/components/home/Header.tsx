@@ -77,8 +77,9 @@ class Header extends React.Component<IProps>{
 
 function mapStateToProps(state:any){
     console.log("map state to props...")
+    
     return {
-        account:state.account
+        account:state.header.account
     }
 }
 

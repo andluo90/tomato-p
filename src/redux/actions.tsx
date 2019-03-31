@@ -20,3 +20,11 @@ export const setEditingIdAction = (id:number)=>{
         payload:id
     }
 }
+
+
+export const changeInput = (name:string)=>{
+    return {
+        type:'changeInput',
+        payload:name
+    }
+}

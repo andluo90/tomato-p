@@ -9,7 +9,7 @@ import {connect} from 'react-redux'
 import './Home.scss'
 
 import Header from './Header'
-import {Todos} from './Todos'
+import Todos from './Todos'
 import {TodoItem} from './TodoItem'
 
 interface IProps {

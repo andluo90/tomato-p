@@ -2,70 +2,66 @@ import * as React from 'react'
 
 import {Input,Icon,message} from 'antd'
 
+import {connect} from  'react-redux'
+
+import {changeInput} from '../../redux/actions'
 
 import './Todos.scss'
 
-interface IState {
-    taskName:string;
-}
 
 interface IProps {
     addTodo:any
+    inputTaskName:string
+    changeInputTaskName:any
 }
 
-class Todos extends React.Component<IProps,IState> {
+class Todos extends React.Component<IProps,{}> {
 
     constructor(props:any){
         super(props)
-        this.state = {
-            taskName:''
-        }
     }
 
     onChange(e:React.ChangeEvent<HTMLInputElement>){
-        this.setState({
-            taskName:e.target.value
-        })
+        this.props.changeInputTaskName(e.target.value)
     }
 
     onKeyUp(e:React.KeyboardEvent){
         // 添加新任务回车事件
         if (e.keyCode === 13){
-            const {taskName} = this.state
-            if(taskName === ''){
+            const {inputTaskName} = this.props
+            if(inputTaskName === ''){
                 message.warning('任务名不能为空!',2)
             }
-            this.handleAddTodo(taskName)
+            this.handleAddTodo(inputTaskName)
         }
     }
 
     handleClick(e:React.MouseEvent){
         // 添加新任务点击事件
-        const {taskName} = this.state
-        if(taskName === ''){
+        const {inputTaskName} = this.props
+        if(inputTaskName === ''){
             message.warning('任务名不能为空!',2)   
         }else{
-            this.handleAddTodo(taskName)
+            this.handleAddTodo(inputTaskName)
         }
     }
 
     handleAddTodo(taskName:string){
         // 添加新任务
         this.props.addTodo(taskName)
-        this.setState({
-            taskName:''
-        })
+        this.props.changeInputTaskName('')
+
         message.info("添加新任务成功!",2)
     }
 
     render(){
-        const { taskName } = this.state;
+        const { inputTaskName } = this.props;
         return (
             <div id='todos'>
                 <Input size='large'
                     placeholder="添加新任务"
                     suffix = {<Icon type='enter' onClick={(e:React.MouseEvent)=>this.handleClick(e)} />}
-                    value={taskName}
+                    value={inputTaskName}
                     onChange={(e:React.ChangeEvent<HTMLInputElement>)=>this.onChange(e)}
                     onKeyUp={(e:React.KeyboardEvent) =>this.onKeyUp(e)}
                 />
@@ -75,4 +71,16 @@ class Todos extends React.Component<IProps,IState> {
     }
 }
 
-export {Todos}
+function mapStateToProps(state:any){
+    return {
+        inputTaskName:state.todos.inputTaskName
+    }
+}
+
+function mapDispatchToProps(dispatch:any){
+    return {
+        changeInputTaskName:(name:string)=>dispatch(changeInput(name))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Todos)

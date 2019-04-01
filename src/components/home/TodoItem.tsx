@@ -15,7 +15,7 @@ interface IProps {
     id:number
     IsEditing:boolean
     description:string
-    checked:boolean
+    completed:boolean
     deleted:boolean
     setEditingId:any
     updateTodo:any
@@ -54,8 +54,8 @@ class TodoItem extends React.Component<IProps,{}>{
 
     handleClick = (e:React.MouseEvent)=>{
         message.info('更新任务成功!',2)
-        const {id,description,checked,deleted} = this.props
-        this.update({id,description,checked,deleted})
+        const {id,description,completed,deleted} = this.props
+        this.update({id,description,completed,deleted})
     }
 
     handleDoubleClick(){
@@ -70,9 +70,9 @@ class TodoItem extends React.Component<IProps,{}>{
     }
 
     onInputChange(e:React.ChangeEvent<HTMLInputElement>){
-        const {id,checked,deleted} = this.props
+        const {id,completed,deleted} = this.props
         console.log(`input change....${e.target.value}`)
-        this.props.updateTodo({id,description:e.target.value,checked,deleted})
+        this.props.updateTodo({id,description:e.target.value,completed,deleted})
 
     }
 
@@ -106,7 +106,7 @@ class TodoItem extends React.Component<IProps,{}>{
     }
 
     render(){
-        if(this.props.deleted || this.props.checked){
+        if(this.props.deleted){
             return ''
         }
         let leftElement = null
@@ -114,7 +114,7 @@ class TodoItem extends React.Component<IProps,{}>{
         if(this.props.IsEditing){
             leftElement = (
                 <div className='left'>
-                    <Checkbox checked={this.props.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
+                    <Checkbox checked={this.props.completed} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
                     <input className='input' ref={this.textInput} value={this.props.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />
                 </div>
             )
@@ -126,7 +126,7 @@ class TodoItem extends React.Component<IProps,{}>{
         }else{
             leftElement = (
                 <div className='left'>
-                    <Checkbox checked={this.props.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
+                    <Checkbox checked={this.props.completed} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
                     <span >{this.props.description}</span>
                 </div>
             )

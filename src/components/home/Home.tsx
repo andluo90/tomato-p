@@ -96,7 +96,7 @@ class Home extends React.Component<IProps,{}> {
                             return (<TodoItem key={item.id} 
                                               id={item.id} 
                                               description = {item.description}
-                                              checked = {item.checked}
+                                              completed = {item.completed}
                                               deleted = {item.deleted}
                                               IsEditing={updataingTodoId === item.id}  />)
                         })}
@@ -104,7 +104,7 @@ class Home extends React.Component<IProps,{}> {
                             return (<TodoItem key={item.id}
                                               id={item.id} 
                                               description = {item.description}
-                                              checked = {item.checked}
+                                              completed = {item.completed}
                                               deleted = {item.deleted}
                                               IsEditing={updataingTodoId === item.id}  />)
                         })}

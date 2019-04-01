@@ -4,39 +4,38 @@ import {Checkbox,Icon,message} from 'antd'
 
 import axios from '../../config/axios'
 
+import {setEditingIdAction,updateTodoAction} from '../../redux/actions'
+
+import {connect} from 'react-redux'
+
 import './TodoItem.scss'
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 interface IProps {
-    item:any
+    id:number
     IsEditing:boolean
-    updataEditingId:any
-    
-}
-
-interface IState {
     description:string
     checked:boolean
     deleted:boolean
+    setEditingId:any
+    updateTodo:any
     
 }
 
 
 
-class TodoItem extends React.Component<IProps,IState>{
+
+class TodoItem extends React.Component<IProps,{}>{
 
     private textInput:React.RefObject<HTMLInputElement>
 
     constructor(props:any){
         super(props)
         this.textInput = React.createRef();
-        this.state = {
-            description:this.props.item.description,
-            checked:this.props.item.completed,
-            deleted:this.props.item.deleted
-        }
+        
     }
 
+    
 
     componentDidUpdate(){
         // input输入框自动focus
@@ -47,53 +46,52 @@ class TodoItem extends React.Component<IProps,IState>{
 
 
     check = (e:CheckboxChangeEvent)=>{
-        console.log(`checked = ${e.target.checked}`)
         if(e.target.checked){
-            this.setState({
-                checked:true
-            })
-            this.updateTodo({completed:true})
-        }
+            this.update({id:this.props.id,completed:true})
+        }   
 
     }
 
     handleClick = (e:React.MouseEvent)=>{
         message.info('更新任务成功!',2)
-        this.updateTodo({})
+        const {id,description,checked,deleted} = this.props
+        this.update({id,description,checked,deleted})
     }
 
     handleDoubleClick(){
         if(this.props.IsEditing !== true){
-            this.props.updataEditingId(this.props.item.id)
+            this.props.setEditingId(this.props.id)
         }
     }
 
     delete = (e:React.MouseEvent)=>{
         message.info('删除任务成功！',2)
-        this.setState({deleted:true})
-        this.updateTodo({deleted:true})
+        this.update({id:this.props.id,deleted:true})
     }
 
     onInputChange(e:React.ChangeEvent<HTMLInputElement>){
-        this.setState({
-            description:e.target.value
-        })
+        const {id,checked,deleted} = this.props
+        console.log(`input change....${e.target.value}`)
+        this.props.updateTodo({id,description:e.target.value,checked,deleted})
+
     }
 
     keyUp = (e:any)=>{
         
         if( e.keyCode === 13 ){
             message.info('更新任务成功!',2)
-            this.updateTodo({description:this.state.description})
+            this.update({id:this.props.id,description:this.props.description})
         }
     }
 
-    updateTodo = (propety:object)=>{
-
-        this.props.updataEditingId(-1)
-        axios.put(`todos/${this.props.item.id}`,{...this.props.item,...propety})
+    update = (item:any)=>{
+        const {description,checked,deleted} = item
+        
+        this.props.setEditingId(-1)
+        this.props.updateTodo(item)
+        axios.put(`todos/${this.props.id}`,{description,checked,deleted})
         .then((res)=>{
-            console.log(res)
+            console.log('update todo success.')
         })
         .catch((error)=>{
             console.log('put error...')
@@ -103,12 +101,12 @@ class TodoItem extends React.Component<IProps,IState>{
 
     handleEsc(e:React.KeyboardEvent<HTMLDivElement>){
         if(this.props.IsEditing && e.keyCode === 27){
-            this.props.updataEditingId(-1)
+            this.props.setEditingId(-1)
         }
     }
 
     render(){
-        if(this.state.deleted || this.state.checked){
+        if(this.props.deleted || this.props.checked){
             return ''
         }
         let leftElement = null
@@ -116,8 +114,8 @@ class TodoItem extends React.Component<IProps,IState>{
         if(this.props.IsEditing){
             leftElement = (
                 <div className='left'>
-                    <Checkbox checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
-                    <input className='input' ref={this.textInput} value={this.state.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />
+                    <Checkbox checked={this.props.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
+                    <input className='input' ref={this.textInput} value={this.props.description}  onKeyUp={(e:any)=>this.keyUp(e)} onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{this.onInputChange(e)}} />
                 </div>
             )
             rightElement = (
@@ -128,8 +126,8 @@ class TodoItem extends React.Component<IProps,IState>{
         }else{
             leftElement = (
                 <div className='left'>
-                    <Checkbox checked={this.state.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
-                    <span >{this.state.description}</span>
+                    <Checkbox checked={this.props.checked} onChange={(e:CheckboxChangeEvent)=>{this.check(e)}} />
+                    <span >{this.props.description}</span>
                 </div>
             )
             rightElement = (
@@ -148,4 +146,18 @@ class TodoItem extends React.Component<IProps,IState>{
     }
 }
 
-export {TodoItem}
+function mapStateToProps(state:any){
+    return {
+        
+    }
+}
+
+function mapDispatchToProps(dispatch:any){
+    return {
+        updateTodo:(todo:object)=> dispatch(updateTodoAction(todo)),
+        setEditingId:(id:number)=>dispatch(setEditingIdAction(id))
+    }
+}
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(TodoItem)

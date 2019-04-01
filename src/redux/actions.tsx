@@ -28,3 +28,10 @@ export const changeInput = (name:string)=>{
         payload:name
     }
 }
+
+export const updateTodoAction = (todo:object)=>{
+    return {
+        type:'updateTodo',
+        payload:todo
+    }
+}

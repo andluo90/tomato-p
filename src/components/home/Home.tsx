@@ -10,7 +10,7 @@ import './Home.scss'
 
 import Header from './Header'
 import Todos from './Todos'
-import {TodoItem} from './TodoItem'
+import TodoItem from './TodoItem'
 
 interface IProps {
     todos:object[]
@@ -50,7 +50,6 @@ class Home extends React.Component<IProps,{}> {
             console.log(res)
             const newTodos = res.data.resources
             this.props.updateTodos(newTodos)
-            console.log(newTodos)
         } catch (error) {
             console.log('get todos error')
             console.log(error)
@@ -82,30 +81,32 @@ class Home extends React.Component<IProps,{}> {
         
     }
 
-    updataEditingId = (id:number):void=>{
-        this.props.setEditingId(id)
-    }
+
 
     
 
     render(){
-        
+        const {updataingTodoId} = this.props
         return (
             <div id='home'>
                 <Header />
                 <main>
                     <Todos addTodo={(item:string)=>this.addTodo(item)}>
                         {this.unCompletedTodos.map((item:any)=>{
-                            if(this.props.updataingTodoId === item.id){
-                                return (<TodoItem key={item.id} item={item} IsEditing={true} updataEditingId={this.updataEditingId} />)
-                            }
-                            return (<TodoItem key={item.id} item={item} IsEditing={false} updataEditingId={(id:number)=>this.updataEditingId(id)} />)
+                            return (<TodoItem key={item.id} 
+                                              id={item.id} 
+                                              description = {item.description}
+                                              checked = {item.checked}
+                                              deleted = {item.deleted}
+                                              IsEditing={updataingTodoId === item.id}  />)
                         })}
                         {this.completedTodos.map((item:any)=>{
-                            if(this.props.updataingTodoId === item.id){
-                                return (<TodoItem key={item.id} item={item} IsEditing={true} updataEditingId={this.updataEditingId} />)
-                            }
-                            return (<TodoItem key={item.id} item={item} IsEditing={false} updataEditingId={(id:number)=>this.updataEditingId(id)} />)
+                            return (<TodoItem key={item.id}
+                                              id={item.id} 
+                                              description = {item.description}
+                                              checked = {item.checked}
+                                              deleted = {item.deleted}
+                                              IsEditing={updataingTodoId === item.id}  />)
                         })}
                     </Todos>
                 </main>

@@ -11,6 +11,7 @@ import './Home.scss'
 import Header from './Header'
 import Todos from './Todos'
 import TodoItem from './TodoItem'
+import Tomatos from './Tomatos'
 
 interface IProps {
     todos:object[]
@@ -91,24 +92,28 @@ class Home extends React.Component<IProps,{}> {
             <div id='home'>
                 <Header />
                 <main>
-                    <Todos addTodo={(item:string)=>this.addTodo(item)}>
-                        {this.unCompletedTodos.map((item:any)=>{
-                            return (<TodoItem key={item.id} 
-                                              id={item.id} 
-                                              description = {item.description}
-                                              completed = {item.completed}
-                                              deleted = {item.deleted}
-                                              IsEditing={updataingTodoId === item.id}  />)
-                        })}
-                        {this.completedTodos.map((item:any)=>{
-                            return (<TodoItem key={item.id}
-                                              id={item.id} 
-                                              description = {item.description}
-                                              completed = {item.completed}
-                                              deleted = {item.deleted}
-                                              IsEditing={updataingTodoId === item.id}  />)
-                        })}
-                    </Todos>
+                    <div className='wrapper'>
+                        <Tomatos />
+                        <Todos addTodo={(item:string)=>this.addTodo(item)}>
+                            {this.unCompletedTodos.map((item:any)=>{
+                                return (<TodoItem key={item.id} 
+                                                id={item.id} 
+                                                description = {item.description}
+                                                completed = {item.completed}
+                                                deleted = {item.deleted}
+                                                IsEditing={updataingTodoId === item.id}  />)
+                            })}
+                            {this.completedTodos.map((item:any)=>{
+                                return (<TodoItem key={item.id}
+                                                id={item.id} 
+                                                description = {item.description}
+                                                completed = {item.completed}
+                                                deleted = {item.deleted}
+                                                IsEditing={updataingTodoId === item.id}  />)
+                            })}
+                        </Todos>
+                    </div>
+                  
                 </main>
             </div>
         )

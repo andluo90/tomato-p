@@ -1,0 +1,56 @@
+#tomatos {
+    max-width: 960px;
+    background:#fff;
+    border:1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 0 rgba(225,225,225,.2);
+    padding:16px;
+
+    #startBtn {
+        width:100%;
+
+    }
+    .inputWrapper {
+        position: relative;
+
+    }
+
+    .abort {
+        position: absolute;
+        right:-12px;
+        top:0;
+        font-size: 1.2em;
+        transform: translate(-50%,-50%);
+        cursor: pointer;
+
+    }
+    
+    .progressWrapper {
+        width:100%;
+        border:1px solid #ddd;
+        height: 38px;
+        border-radius: 5px;
+        position: relative;
+
+        span {
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform:translate(-50%,-50%);
+            z-index:1;
+        }
+        #progress {
+            position: absolute;
+            border-radius: 5px;
+            left:0;
+            top:0;
+            bottom:0;
+            width:90%;
+            background:rgb(244,244,244);
+            z-index:0;
+        }
+
+        
+
+    }
+}

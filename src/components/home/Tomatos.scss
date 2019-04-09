@@ -13,6 +13,11 @@
     .inputWrapper {
         position: relative;
 
+        .ant-input-suffix {
+            cursor: pointer;
+            font-size: 16px;
+        }
+
     }
 
     .abort {
@@ -24,33 +29,5 @@
         cursor: pointer;
 
     }
-    
-    .progressWrapper {
-        width:100%;
-        border:1px solid #ddd;
-        height: 38px;
-        border-radius: 5px;
-        position: relative;
 
-        span {
-            position: absolute;
-            left:50%;
-            top:50%;
-            transform:translate(-50%,-50%);
-            z-index:1;
-        }
-        #progress {
-            position: absolute;
-            border-radius: 5px;
-            left:0;
-            top:0;
-            bottom:0;
-            width:90%;
-            background:rgb(244,244,244);
-            z-index:0;
-        }
-
-        
-
-    }
 }

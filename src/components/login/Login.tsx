@@ -102,7 +102,7 @@ export default class Login extends React.Component<{},IState>{
                     onChange={(e)=>{this.onChangePassword(e)}}
                  />
                 <Spin spinning={this.state.loading}>
-                    <Button type='primary' onClick={this.submit}>登录</Button>
+                    <Button type='primary' onClick={this.submit} >登录</Button>
                 </Spin>
                 <span>Or <Link to='/register'>立即注册</Link></span>
             </div>

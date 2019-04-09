@@ -21,7 +21,6 @@ class Header extends React.Component<IProps>{
             localStorage.setItem('x-token','')
             this.props.logout()
             message.info('退出成功.',2);
-            console.log('click left button', e);
         }else if(e.key === '1'){
             message.warn('该功能暂未实现',2);
         }
@@ -37,7 +36,6 @@ class Header extends React.Component<IProps>{
                 this.props.setUserInfo(res.data.account)
              })
              .catch((error)=>{
-                 console.log('get me error')
                  console.log(error)
              })
     }
@@ -76,7 +74,6 @@ class Header extends React.Component<IProps>{
 }
 
 function mapStateToProps(state:any){
-    console.log("map state to props...")
     
     return {
         account:state.header.account

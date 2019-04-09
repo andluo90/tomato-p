@@ -48,7 +48,6 @@ class Home extends React.Component<IProps,{}> {
         try {
             const res = await axios.get('todos')
             console.log(`get todos success..`)
-            console.log(res)
             const newTodos = res.data.resources
             this.props.updateTodos(newTodos)
         } catch (error) {

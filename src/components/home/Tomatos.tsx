@@ -1,12 +1,17 @@
 import * as React from 'react'
 
-import {Button,Icon,Modal,Input} from 'antd'
+import {Button,Icon,Modal,Input,message} from 'antd'
+import {format} from 'date-fns'
+
+import {groupBy} from 'lodash'
 
 import axios from '../../config/axios'
+
 
 import './Tomatos.scss'
 
 import Countdown from './Countdown'
+import TomatoItem from './TomatoItem'
 
 const confirm = Modal.confirm;
 
@@ -16,6 +21,8 @@ interface IState {
     description:string
     duration:number
     id:number|null
+    started_at:string|null
+    tomatoList:object[]
 }
 
 
@@ -26,32 +33,73 @@ class Tomatos extends React.Component<{},IState>{
             status:0,
             description:'',
             duration:30,
-            id:null
+            id:null,
+            started_at:null,
+            tomatoList:[]
         }
         this.showConfirm = this.showConfirm.bind(this)
         this.finish = this.finish.bind(this)
     }
 
+    async componentDidMount(){
+        try {
+            const req = await axios.get('tomatoes')
+            console.log(`获取tomato list 成功.`)
+            console.log(req)
+            this.setState({
+                tomatoList:req.data.resources
+            })
+        } catch (error) {
+            console.log(`获取tomato list 失败.`)
+            console.log(error)
+            
+        }
+    }
 
+    get finishedList(){
+        // 获取完成的tomato list
+        return this.state.tomatoList.filter((i:any)=> i.ended_at && !i.aborted)
+    }
+
+    get formatList(){
+        return this.finishedList.map((i:any)=>{
+            return {...i,
+                    'date':format(i.ended_at,'MM-DD'),
+                    'started_at':format(i.started_at,'HH:mm'),
+                    'ended_at':format(i.ended_at,'HH:mm')
+                   }
+        })
+    }
+
+    get groupByList(){
+        
+        return groupBy(this.formatList,'date')
+        
+    }
 
     async start(){
+        // 开始计时
         console.log('开始计时...')
         this.setState({
-            status:1
+            status:1,
+            started_at:new Date().toISOString()
+            
         })
         try{
             const res = await axios.post('tomatoes',{duration:180})
             console.log(res)
             console.log(`id is ${res.data.resource.id}`)
             this.setState({
-                id:res.data.resource.id
+                id:res.data.resource.id,
+                started_at:res.data.resource.started_at
             })
 
         }catch(error){
             console.log(`add tomato error`)
             this.setState({
                 status:0,
-                id:null
+                id:null,
+                started_at:null
             })
         }
         
@@ -97,29 +145,41 @@ class Tomatos extends React.Component<{},IState>{
     }
     
     async enterInput(e:any){
-        console.log('更新tomato成功.')
-        this.setState({
-            status:0,
-            description :'',
-            id:null
-        })
-        try {
-            const rep = await axios.put(`tomatoes/${this.state.id}`,{
-                description:e.target.value,
-                end_at:new Date()
+        if(e.target.value === ''){
+            message.warning('任务名不能为空.',2)
+
+        }else {
+            const {id,description,started_at} = this.state
+            const newTomatos = [...this.state.tomatoList,{id,description,started_at,aborted:null,ended_at:new Date().toISOString()}]
+            this.setState({
+                status:0,
+                description :'',
+                id:null,
+                tomatoList:newTomatos
             })
-            console.log('更新tomato成功.')
-            console.log(rep)
-        } catch (error) {
-            console.log('更新tomato报错.')
-            
+            try {
+                const rep = await axios.put(`tomatoes/${this.state.id}`,{
+                    description:e.target.value,
+                    end_at:new Date()
+                })
+                message.success('更新任务成功.',2)
+
+                console.log(rep)
+            } catch (error) {
+                console.log('更新tomato报错.')
+                
+            }
         }
+
     }
     
     
 
     render(){
-
+        console.log(`render....`)
+        const obj = this.groupByList
+        const keys = Object.keys(obj)
+        keys.sort((a,b)=>new Date(b).getTime() - new Date(a).getTime())
         let component = null
 
         const {status} = this.state
@@ -152,8 +212,17 @@ class Tomatos extends React.Component<{},IState>{
 
         return (
             <div id='tomatos'>
-                {component}
+                <div className='tomatoWrapper'>
+                    {component}
+                </div>
+                {keys.map((key:string)=>{
+                    return (
+                        <TomatoItem key={key} date={key} data={obj[key]} />
+                    )
+                })}
+
             </div>
+            
         )
     }
 }

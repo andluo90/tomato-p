@@ -75,6 +75,8 @@ export default class Login extends React.Component<{},IState>{
         })
     }
 
+
+
     render(){
         if(this.state.login_success){
             return (
@@ -93,6 +95,8 @@ export default class Login extends React.Component<{},IState>{
                     suffix={suffix}
                     value={this.state.userName}
                     onChange={(e)=>{this.onChangeUserName(e)}}
+                    onPressEnter={this.submit}
+
                  />
                  <Input.Password
                     placeholder="请输入密码"
@@ -100,6 +104,7 @@ export default class Login extends React.Component<{},IState>{
                     // suffix={suffix}
                     value={this.state.password}
                     onChange={(e)=>{this.onChangePassword(e)}}
+                    onPressEnter={this.submit}
                  />
                 <Spin spinning={this.state.loading}>
                     <Button type='primary' onClick={this.submit} >登录</Button>

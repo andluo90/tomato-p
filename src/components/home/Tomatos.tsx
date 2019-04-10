@@ -32,7 +32,7 @@ class Tomatos extends React.Component<{},IState>{
         this.state = {
             status:0,
             description:'',
-            duration:30,
+            duration:60*30,
             id:null,
             started_at:null,
             tomatoList:[]
@@ -187,7 +187,7 @@ class Tomatos extends React.Component<{},IState>{
         if(status === 0){
             component = (
                 <Button id='startBtn' size='large' onClick={()=>{this.start()}}>
-                    <span>开始番茄</span>
+                    <span>开始番茄</span>
                 </Button>
             )
         }else if(status === 1){

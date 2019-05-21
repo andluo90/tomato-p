@@ -6,35 +6,59 @@ import {connect} from 'react-redux'
 
 import './stat.scss'
 
+interface IProps {
+    todos:any[]
+}
 
+interface IState {
+    activeState:any
+}
 
-class Stat extends React.Component{
+class Stat extends React.Component<IProps,IState>{
     constructor(props:any){
         super(props)
+        this.state = {
+            activeState : ['','','','']
+        }
+    }
+
+    getCompletedTodoCount(){
+        const tmp  = this.props.todos.filter(i => !i.deleted && i.completed )
+        return tmp.length
+    }
+
+    click(index:number){
+        const tmp = ['','','','']
+        tmp[index] = 'active'
+        this.setState({
+            activeState:tmp
+        })
+        
     }
     
     render(){
+        const {activeState} = this.state
         return (
             <ul id='stat'>
-                <li>
+                <li className={activeState[0]} onClick={()=>this.click(0)}>
                     <div className='title'>统计</div>
                     <div className='title2'>一周累计</div>
                     <div className='count'>0</div>
                 </li>
-                <li>
+                <li className={activeState[1]} onClick={()=>this.click(1)}>
                     <div className='title'>目标</div>
                     <div className='title2'>今日目标</div>
                     <div className='count'>0</div>
                 </li>
-                <li>
+                <li className={activeState[2]} onClick={()=>this.click(2)}>
                     <div className='title'>番茄历史</div>
                     <div className='title2'>累计完成番茄</div>
-                    <div className='count'>0</div>
+                    <div className='count'>0/8</div>
                 </li>
-                <li>
+                <li className={activeState[3]} onClick={()=>this.click(3)}>
                     <div className='title'>任务历史</div>
                     <div className='title2'>累计完成历史</div>
-                    <div className='count'>0</div>
+                    <div className='count'>{this.getCompletedTodoCount()}</div>
                 </li>
             </ul>
         )
@@ -44,7 +68,7 @@ class Stat extends React.Component{
 
 function mapStateToProps(state:any){
     return {
-
+        todos:state.home.todos
     }
 }
 

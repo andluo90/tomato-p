@@ -45,7 +45,7 @@ class Header extends React.Component<IProps>{
 
         const menu = (
             <Menu onClick={(e)=>this.handleClick(e)}>
-              <Menu.Item key="1"><Icon type="user" />账号设置</Menu.Item>
+              <Menu.Item key="1"><Icon type="user" />偏好设置</Menu.Item>
               <Menu.Item key="2" ><Icon type="logout" />退出</Menu.Item>
             </Menu>
         );

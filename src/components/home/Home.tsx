@@ -12,6 +12,7 @@ import Header from './Header'
 import Todos from './Todos'
 import TodoItem from './TodoItem'
 import Tomatos from './Tomatos'
+import Stat from '../stat/stat'
 
 interface IProps {
     todos:object[]
@@ -114,7 +115,9 @@ class Home extends React.Component<IProps,{}> {
                     </div>
                   
                 </main>
+                <Stat />
             </div>
+            
         )
     }
 

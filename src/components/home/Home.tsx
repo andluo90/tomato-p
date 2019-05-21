@@ -116,6 +116,9 @@ class Home extends React.Component<IProps,{}> {
                   
                 </main>
                 <Stat />
+                <footer>
+                    <span>© 番茄土豆</span>
+                </footer>
             </div>
             
         )

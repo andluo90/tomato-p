@@ -26,6 +26,7 @@
         cursor: pointer;
         background: #FFF;
         flex:1;
+        position: relative;
 
         .title {
             padding-top:10px;
@@ -44,6 +45,15 @@
             font-size:30px;
             font-weight: 400;
             color:#666;
+        }
+
+        svg {
+            width: 228px;
+            height: 97px;
+            position:absolute;
+            left:0;
+            top:0;
+            
         }
     }
 }

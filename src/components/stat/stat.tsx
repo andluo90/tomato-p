@@ -12,7 +12,8 @@ interface IProps {
 }
 
 interface IState {
-    activeState:any
+    activeState:any,
+    activeIndex:number
 }
 
 // 统计组件
@@ -21,6 +22,7 @@ class Stat extends React.Component<IProps,IState>{
     constructor(props:any){
         super(props)
         this.state = {
+            activeIndex : -1,
             activeState : ['','','','']
         }
     }
@@ -54,10 +56,20 @@ class Stat extends React.Component<IProps,IState>{
 
     click(index:number){
         const tmp = ['','','','']
-        tmp[index] = 'active'
-        this.setState({
-            activeState:tmp
-        })
+        if(this.state.activeIndex !== index){
+            tmp[index] = 'active'
+            this.setState({
+                activeState:tmp,
+                activeIndex:index
+            })
+        }else {
+            this.setState({
+                activeState:tmp,
+                activeIndex:-1
+            })
+        }
+        
+        
         
     }
     

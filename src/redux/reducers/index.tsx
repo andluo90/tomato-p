@@ -4,5 +4,6 @@ import header from './header'
 import home from './home'
 import todos from './todos'
 import todoItem from './todoItem'
+import tomatos from './tomatos'
 
-export default combineReducers({header,home,todos,todoItem})
+export default combineReducers({header,home,todos,todoItem,tomatos})

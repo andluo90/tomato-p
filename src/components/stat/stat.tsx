@@ -8,6 +8,7 @@ import './stat.scss'
 
 interface IProps {
     todos:any[]
+    tomatos:any[]
 }
 
 interface IState {
@@ -24,6 +25,11 @@ class Stat extends React.Component<IProps,IState>{
 
     getCompletedTodoCount(){
         const tmp  = this.props.todos.filter(i => !i.deleted && i.completed )
+        return tmp.length
+    }
+
+    getCompletedTomatosCount(){
+        const tmp = this.props.tomatos.filter(i => !i.aborted && !!i.ended_at )
         return tmp.length
     }
 
@@ -53,7 +59,7 @@ class Stat extends React.Component<IProps,IState>{
                 <li className={activeState[2]} onClick={()=>this.click(2)}>
                     <div className='title'>番茄历史</div>
                     <div className='title2'>累计完成番茄</div>
-                    <div className='count'>8</div>
+                    <div className='count'>{this.getCompletedTomatosCount()}</div>
                 </li>
                 <li className={activeState[3]} onClick={()=>this.click(3)}>
                     <div className='title'>任务历史</div>
@@ -74,7 +80,8 @@ class Stat extends React.Component<IProps,IState>{
 
 function mapStateToProps(state:any){
     return {
-        todos:state.home.todos
+        todos:state.home.todos,
+        tomatos:state.tomatos.tomatoList
     }
 }
 

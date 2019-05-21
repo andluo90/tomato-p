@@ -137,7 +137,7 @@ function mapStateToProps(state:any){
 function mapDispatchToProps(dispatch:any){
     return {
         updateTodos:(todos:object[])=> dispatch(updateTodosAction(todos)),
-        setEditingId:(id:number)=> dispatch(setEditingIdAction(id))
+        setEditingId:(id:number)=> dispatch(setEditingIdAction(id)),
     }
 }
 

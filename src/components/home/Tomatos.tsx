@@ -13,6 +13,11 @@ import './Tomatos.scss'
 import Countdown from './Countdown'
 import TomatoItem from './TomatoItem'
 
+import {connect} from  'react-redux'
+
+
+
+
 const confirm = Modal.confirm;
 
 
@@ -22,11 +27,16 @@ interface IState {
     duration:number
     id:number|null
     started_at:string|null
-    tomatoList:object[]
 }
 
+interface IProps {
+    tomatoList:any[]
+    updateTomatoList:any;
+}
 
-class Tomatos extends React.Component<{},IState>{
+// 番茄列表组件
+
+class Tomatos extends React.Component<IProps,IState>{
     constructor(props:any){
         super(props)
         this.state = {
@@ -34,8 +44,7 @@ class Tomatos extends React.Component<{},IState>{
             description:'',
             duration:60*30,
             id:null,
-            started_at:null,
-            tomatoList:[]
+            started_at:null
         }
         this.showConfirm = this.showConfirm.bind(this)
         this.finish = this.finish.bind(this)
@@ -46,9 +55,8 @@ class Tomatos extends React.Component<{},IState>{
             const req = await axios.get('tomatoes')
             console.log(`获取tomato list 成功.`)
             console.log(req)
-            this.setState({
-                tomatoList:req.data.resources
-            })
+            this.props.updateTomatoList(req.data.resources)
+            
         } catch (error) {
             console.log(`获取tomato list 失败.`)
             console.log(error)
@@ -58,7 +66,7 @@ class Tomatos extends React.Component<{},IState>{
 
     get finishedList(){
         // 获取完成的tomato list
-        return this.state.tomatoList.filter((i:any)=> i.ended_at && !i.aborted)
+        return this.props.tomatoList.filter((i:any)=> i.ended_at && !i.aborted)
     }
 
     get formatList(){
@@ -150,13 +158,10 @@ class Tomatos extends React.Component<{},IState>{
 
         }else {
             const {id,description,started_at} = this.state
-            const newTomatos = [...this.state.tomatoList,{id,description,started_at,aborted:null,ended_at:new Date().toISOString()}]
-            this.setState({
-                status:0,
-                description :'',
-                id:null,
-                tomatoList:newTomatos
-            })
+            const newTomatos = [...this.props.tomatoList,{id,description,started_at,aborted:null,ended_at:new Date().toISOString()}]
+            
+            this.props.updateTomatoList(newTomatos)
+            
             try {
                 const rep = await axios.put(`tomatoes/${this.state.id}`,{
                     description:e.target.value,
@@ -227,4 +232,16 @@ class Tomatos extends React.Component<{},IState>{
     }
 }
 
-export default Tomatos
+function mapStateToProps(state:any){
+    return {
+        tomatoList:state.tomatos.tomatoList
+    }
+}
+
+function mapDispathToProps(dispatch:any){
+    return {
+        updateTomatoList:(newList:any)=> dispatch({type:'updateTomatoList',payload:newList})
+    }
+}
+
+export default connect(mapStateToProps,mapDispathToProps)(Tomatos)

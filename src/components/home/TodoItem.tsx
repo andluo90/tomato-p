@@ -47,7 +47,7 @@ class TodoItem extends React.Component<IProps,{}>{
 
     check = (e:CheckboxChangeEvent)=>{
         if(e.target.checked){
-            this.update({id:this.props.id,completed:true})
+            this.update({id:this.props.id,completed:true,completed_at:new Date()})
         }   
 
     }
@@ -85,13 +85,14 @@ class TodoItem extends React.Component<IProps,{}>{
     }
 
     update = (item:any)=>{
-        const {description,checked,deleted} = item
+        const {description,checked,completed=false,deleted,completed_at=null} = item
         
         this.props.setEditingId(-1)
         this.props.updateTodo(item)
-        axios.put(`todos/${this.props.id}`,{description,checked,deleted})
+        axios.put(`todos/${this.props.id}`,{description,checked,completed,deleted,completed_at})
         .then((res)=>{
             console.log('update todo success.')
+            console.log(res)
         })
         .catch((error)=>{
             console.log('put error...')

@@ -15,6 +15,8 @@ interface IState {
     activeState:any
 }
 
+// 统计组件
+
 class Stat extends React.Component<IProps,IState>{
     constructor(props:any){
         super(props)
@@ -23,14 +25,31 @@ class Stat extends React.Component<IProps,IState>{
         }
     }
 
-    getCompletedTodoCount(){
-        const tmp  = this.props.todos.filter(i => !i.deleted && i.completed )
-        return tmp.length
+    get completedTodo(){
+        // 累计完成历史
+        return this.props.todos.filter(i => !i.deleted && i.completed )
     }
 
-    getCompletedTomatosCount(){
-        const tmp = this.props.tomatos.filter(i => !i.aborted && !!i.ended_at )
-        return tmp.length
+    get todayTodos(){
+        // 今日完成历史
+        const today = new Date().setHours(0,0,0,0)
+        return this.completedTodo.filter((i)=>{
+            return new Date(i.completed_at).getTime() > today
+        })
+    }
+
+    get weekTodos(){
+        // 一周完成历史
+        const week = new Date().getTime() -  7*24*60*60*1000
+        return this.completedTodo.filter((i)=>{
+            return new Date(i.completed_at).getTime() > week
+        })
+    }
+    
+
+    get CompletedTomatos(){
+        return this.props.tomatos.filter(i => !i.aborted && !!i.ended_at )
+        
     }
 
     click(index:number){
@@ -49,23 +68,23 @@ class Stat extends React.Component<IProps,IState>{
                 <li className={activeState[0]} onClick={()=>this.click(0)}>
                     <div className='title'>统计</div>
                     <div className='title2'>一周累计</div>
-                    <div className='count'>0</div>
+                    <div className='count'>{this.weekTodos.length}</div>
                 </li>
                 <li className={activeState[1]} onClick={()=>this.click(1)}>
                     <div className='title'>目标</div>
                     <div className='title2'>今日目标</div>
-                    <div className='count'>0/8</div>
+                    <div className='count'>{this.todayTodos.length}/8</div>
                 </li>
                 <li className={activeState[2]} onClick={()=>this.click(2)}>
                     <div className='title'>番茄历史</div>
                     <div className='title2'>累计完成番茄</div>
-                    <div className='count'>{this.getCompletedTomatosCount()}</div>
+                    <div className='count'>{this.CompletedTomatos.length}</div>
                 </li>
                 <li className={activeState[3]} onClick={()=>this.click(3)}>
                     <div className='title'>任务历史</div>
                     <div className='title2'>累计完成历史</div>
                     <div className='count'>
-                        {this.getCompletedTodoCount()}
+                        {this.completedTodo.length}
                         
                     </div>
                     <svg>

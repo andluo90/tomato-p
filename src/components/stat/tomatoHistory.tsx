@@ -21,7 +21,6 @@ interface IProps {
 }
 
 interface IState {
-    activeTab:number
     activeSearch:boolean
     searchKey:string
     currentPage:number
@@ -36,7 +35,6 @@ class TomatoHistory extends React.Component<IProps,IState>{
     constructor(props:any){
         super(props)
         this.state = {
-            activeTab:0,
             activeSearch:false,
             searchKey:'',
             currentPage:1,
@@ -48,36 +46,20 @@ class TomatoHistory extends React.Component<IProps,IState>{
 
     get completedTodos():any[]{
         // 获取已完成的任务列表,并且把时间格式化一下
-        const {activeTab,searchKey,currentPage,pageSize,today,aMonthAgo} = this.state
+        const {searchKey,currentPage,pageSize,today,aMonthAgo} = this.state
         const {tomatos} = this.props
         let tmp = null;
-        
 
-        // 过滤已完成或已删除的数据
-        if(activeTab === 0){
-            tmp = tomatos.filter((i)=>{
-                if(!i.aborted && i.ended_at && i.description && i.description.search(searchKey)>=0){
-                    // 根据时间过滤数据
-                    if (isWithinRange(i.ended_at,aMonthAgo,addDays(today,1))){
-                        return i
-                    }
+        // 过滤已完成的番茄
+        tmp = tomatos.filter((i)=>{
+            if(!i.aborted && i.ended_at && i.description && i.description.search(searchKey)>=0){
+                // 根据时间过滤数据
+                if (isWithinRange(i.ended_at,aMonthAgo,addDays(today,1))){
+                    return i
                 }
-            })
+            }
+        })
             
-        }else{
-            tmp = tomatos.filter((i)=>{
-                if(i.aborted && i.description &&i.description.search(searchKey)>=0){
-                    // 根据时间过滤数据
-                    if (isWithinRange(i.updated_at,aMonthAgo,addDays(today,1))){
-                        return i
-                    }
-                }
-            })
-            
-        }
-
-        
-        
 
         // 根据页数获取对应的数据
         const totalCount = tmp.length
@@ -88,26 +70,19 @@ class TomatoHistory extends React.Component<IProps,IState>{
             return {
                 ...i,
                 completed_day:format(i.ended_at,'YYYY-MM-DD'),
-                completed_time:format(i.ended_at,'HH:mm'),
-                deleted_day:format(i.updated_at,'YYYY-MM-DD'),
-                deleted_time:format(i.updated_at,'HH:mm')
+                completed_time:format(i.ended_at,'HH:mm')
+                
             }
         })
         return [tmp2,totalCount]
     }
 
     get TodoComponents(){
-        // 获取已完成/已删除的任务列表组件
+        // 获取已完成番茄列表组件
         let tmp:any = null
-        const {activeTab} = this.state
-        let desc:string = ''
-        if(activeTab === 0){
-            tmp =  _.groupBy(this.completedTodos[0],'completed_day')
-            desc = '完成'
-        }else {
-            tmp =  _.groupBy(this.completedTodos[0],'deleted_day')
-            desc = '中断'
-        }
+        
+        tmp =  _.groupBy(this.completedTodos[0],'completed_day')
+        
         const keys = Object.keys(tmp)
         keys.sort((a,b)=>new Date(b).getTime() - new Date(a).getTime() )
         const tmp2 = keys.map((i:any)=>{
@@ -116,14 +91,14 @@ class TomatoHistory extends React.Component<IProps,IState>{
                     <div>{format(i,'MM-DD')} 
                         <span className='day'>{format(i,'dddd',{locale:locale2})}</span>
                     </div>
-                    <div className='count'>{`${desc}了${tmp[i].length} 个番茄`}</div>
+                    <div className='count'>{`完成了${tmp[i].length} 个番茄`}</div>
                 </div>
                 <div className="right">
                     <ul className='list'>
                         {tmp[i].map((j:any)=>{
                             return (<li key={j.id} className='list-item'>
                                 <div>
-                                    <span className='time'>{activeTab === 0?j.completed_time:j.deleted_time}</span>
+                                    <span className='time'>{j.completed_time}</span>
                                     {j.description}
                                 </div>
                             </li>)
@@ -146,13 +121,6 @@ class TomatoHistory extends React.Component<IProps,IState>{
         })
     }
 
-    clickTab(index:number){
-        // 点击 已完成番茄/已删除番茄
-        this.setState({
-            activeTab:index,
-            currentPage:1
-        })
-    }
 
     toggleSearchCSS(){
         // 
@@ -183,15 +151,14 @@ class TomatoHistory extends React.Component<IProps,IState>{
 
 
     render(){
-        const {activeTab,activeSearch} =  this.state
+        const {activeSearch} =  this.state
 
         const searchComponent = activeSearch ? <Search className='search-input'  onSearch={value => this.search(value)}  /> : <Icon className='search' type="search" onClick={()=>this.toggleSearchCSS()}/>
         return (
             <div id='tomatoHistory'>
                 <div className='head'>
                     <div className='left-btn'>
-                        <div className={activeTab === 0 ? 'completed btn active':'completed btn'} onClick={()=>this.clickTab(0)}>已完成的番茄</div>
-                        <div className={activeTab === 1 ? 'deleted btn active':'deleted btn' } onClick={()=>{this.clickTab(1)}}>已中断的番茄</div>
+                        <div className={'completed btn active'} >已完成的番茄</div>
                         {searchComponent}
                     </div>
                     <div className='right-btn'>

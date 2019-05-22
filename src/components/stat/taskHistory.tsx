@@ -21,6 +21,8 @@ interface IState {
     activeTab:number
     activeSearch:boolean
     searchKey:string
+    currentPage:number
+    pageSize:number
 }
 
 class TaskHistory extends React.Component<IProps,IState>{
@@ -31,13 +33,15 @@ class TaskHistory extends React.Component<IProps,IState>{
         this.state = {
             activeTab:0,
             activeSearch:false,
-            searchKey:''
+            searchKey:'',
+            currentPage:1,
+            pageSize:2
         }
     }
 
-    get completedTodos(){
+    get completedTodos():any[]{
         // 获取已完成的任务列表,并且把时间格式化一下
-        const {activeTab,searchKey} = this.state
+        const {activeTab,searchKey,currentPage,pageSize} = this.state
         let tmp = null;
         if(activeTab === 0){
             tmp = this.props.todos.filter((i)=>{
@@ -54,9 +58,13 @@ class TaskHistory extends React.Component<IProps,IState>{
             })
             
         }
-        
 
-        return tmp.map((i)=>{
+        // 根据页数获取对应的数据
+        const totalCount = tmp.length
+        tmp.sort((a,b)=>new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime())
+        tmp = tmp.splice((currentPage-1)*pageSize,pageSize)
+
+        const tmp2 =  tmp.map((i)=>{
             return {
                 ...i,
                 completed_day:format(i.completed_at,'MM-DD'),
@@ -65,11 +73,12 @@ class TaskHistory extends React.Component<IProps,IState>{
                 deleted_time:format(i.updated_at,'HH:mm')
             }
         })
+        return [tmp2,totalCount]
     }
 
     get TodoComponents(){
         // 获取已完成但未删除的任务列表组件
-        const tmp:any =  _.groupBy(this.completedTodos,'completed_day')
+        const tmp:any =  _.groupBy(this.completedTodos[0],'completed_day')
         const keys = Object.keys(tmp)
         keys.sort((a,b)=>new Date(b).getTime() - new Date(a).getTime() )
         const tmp2 = keys.map((i:any)=>{
@@ -107,7 +116,8 @@ class TaskHistory extends React.Component<IProps,IState>{
     clickTab(index:number){
         // 点击 已完成任务/已删除任务
         this.setState({
-            activeTab:index
+            activeTab:index,
+            currentPage:1
         })
     }
 
@@ -128,11 +138,26 @@ class TaskHistory extends React.Component<IProps,IState>{
         
     }
 
+    onBlur(){
+        // 搜索框失去框点
+        this.setState({
+            activeSearch:false
+        })
+    }
+
+    changePage(page:number){
+        this.setState({
+            currentPage:page
+        })
+    }
+
+    
+
 
     render(){
         const {activeTab,activeSearch} =  this.state
 
-        const searchComponent = activeSearch ? <Search className='search-input'  onSearch={value => this.search(value)}  /> : <Icon className='search' type="search" onClick={()=>this.toggleSearchCSS()}/>
+        const searchComponent = activeSearch ? <Search className='search-input' onBlur={()=>this.onBlur()}  onSearch={value => this.search(value)}  /> : <Icon className='search' type="search" onClick={()=>this.toggleSearchCSS()}/>
         
         return (
             <div id='taskHistory'>
@@ -161,7 +186,13 @@ class TaskHistory extends React.Component<IProps,IState>{
                         
                     </ul> 
                 </div>
-                <Pagination defaultCurrent={1} defaultPageSize={2} total={this.completedTodos.length} hideOnSinglePage={true} />
+                <Pagination 
+                    current = {this.state.currentPage}
+                    defaultPageSize={this.state.pageSize} 
+                    total={this.completedTodos[1]} 
+                    hideOnSinglePage={true} 
+                    onChange={(page)=>{this.changePage(page)}}
+                />
 
             </div>
         )

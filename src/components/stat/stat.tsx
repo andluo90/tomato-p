@@ -86,7 +86,6 @@ class Stat extends React.Component<IProps,IState>{
           window.requestAnimationFrame(this.scrollToTop);
           window.scrollTo(0, c - c / 8);
         }
-        console.log('scroll to top done...')
     };
 
     

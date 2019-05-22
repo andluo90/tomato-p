@@ -8,4 +8,56 @@
     border: 1px solid #DDD;
     box-shadow: 0 2px 0 rgba(225,225,225,.2);
     
+    .head {
+        display: flex;
+        justify-content: space-between;
+
+        .left-btn {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 4px;
+            padding-bottom: 4px;
+
+            .btn {
+                font-size: 16px;
+                border: 1px solid #C3C3C3;
+                padding:4px 16px;
+                color:#999;
+                cursor: pointer;
+                
+            }
+
+            .active {
+                background-color: #F4F4F4;
+                font-weight:600;
+                color:#555;
+            }
+
+            .completed {
+                border-radius: 2px 0 0 2px;
+                border-right:0;
+            }
+
+
+            .deleted {
+                margin-right: 6px;  
+                border-radius: 0 2px 2px 0;
+            }
+
+            .search {
+                border: 1px solid #C3C3C3;
+                padding: 8px;
+                cursor: pointer;
+
+            }
+
+            .search-input {
+                width:200px;
+            }
+        }
+
+        .right-btn {
+            width:250px;
+        }
+    }
 }

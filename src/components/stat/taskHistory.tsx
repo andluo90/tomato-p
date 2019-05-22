@@ -46,7 +46,34 @@ class TaskHistory extends React.Component<IProps>{
                     
                 </div>
 
-                <div className='main' />
+                <div className='main'>
+                    <ul>
+                        <li>
+                            <div className="left">
+                                <div>5月21日 
+                                    <span className='day'>周二</span>
+                                </div>
+                                <div className='count'>完成了 2 个任务</div>
+                            </div>
+                            <div className="right">
+                                <ul className='list'>
+                                    <li className='list-item'>
+                                        <div>
+                                            <span className='time'>21:38</span>
+                                            豆瓣电影的JS文件太大
+                                        </div>
+                                    </li>
+                                    <li className='list-item'>
+                                        <div>
+                                            <span className='time'>16:13</span>
+                                             登录注册细节的优化
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         )
     }

@@ -11,6 +11,7 @@
     .head {
         display: flex;
         justify-content: space-between;
+        margin-bottom:1em;
 
         .left-btn {
             display: flex;
@@ -58,6 +59,61 @@
 
         .right-btn {
             width:250px;
+        }
+    }
+
+    .main {
+        >ul {
+            list-style: none;
+            padding:0;
+            >li {
+                background: #FFF;
+                border: 1px solid #DDD;
+                box-shadow: 0 1px 2px 0 rgba(0,0,0,.1);
+                border-radius: 3px;
+                font-size: 14px;
+                color:#222;
+                padding:14px;
+                margin-bottom:8px;
+                display: flex;
+                
+                .left {
+                    width:10em;
+                }
+                .right {
+                    flex-grow: 1;
+                    margin-left:1.3em
+                    
+                }
+
+                .list {
+                    padding:0;
+                }
+
+                .list-item {
+                    list-style: none;
+                    padding:7px;
+
+                }
+                .list-item:hover {
+                    background:#f4f4f4
+                }
+
+                .day {
+                    font-size:12px;
+                    color:#888888;
+                    margin-left:5px;
+                }
+
+                .time {
+                    color:#999;
+                    margin-right:10px;
+                }
+                .count {
+                    margin-top:7px;
+                    color:#888888;
+                }
+            }
         }
     }
 }

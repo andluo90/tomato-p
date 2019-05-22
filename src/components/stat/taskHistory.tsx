@@ -1,11 +1,14 @@
 import * as React from 'react'
 
 import {Icon,DatePicker,Input,Pagination} from 'antd'
+import locale from 'antd/lib/date-picker/locale/zh_CN';
 
 import moment from 'moment';
 
 import _ from 'lodash'
 import {format} from 'date-fns'
+
+import * as locale2 from 'date-fns/locale/zh_cn'
 
 import './taskHistory.scss'
 
@@ -67,9 +70,9 @@ class TaskHistory extends React.Component<IProps,IState>{
         const tmp2 =  tmp.map((i)=>{
             return {
                 ...i,
-                completed_day:format(i.completed_at,'MM-DD'),
+                completed_day:format(i.completed_at,'YYYY-MM-DD'),
                 completed_time:format(i.completed_at,'HH:mm'),
-                deleted_day:format(i.updated_at,'MM-DD'),
+                deleted_day:format(i.updated_at,'YYYY-MM-DD'),
                 deleted_time:format(i.updated_at,'HH:mm')
             }
         })
@@ -84,8 +87,8 @@ class TaskHistory extends React.Component<IProps,IState>{
         const tmp2 = keys.map((i:any)=>{
             return (<li key={i}>
                 <div className="left">
-                    <div>{i} 
-                        <span className='day'>周X</span>
+                    <div>{format(i,'MM-DD')} 
+                        <span className='day'>{format(i,'dddd',{locale:locale2})}</span>
                     </div>
                     <div className='count'>完成了 {tmp[i].length} 个任务</div>
                 </div>
@@ -138,12 +141,7 @@ class TaskHistory extends React.Component<IProps,IState>{
         
     }
 
-    onBlur(){
-        // 搜索框失去框点
-        this.setState({
-            activeSearch:false
-        })
-    }
+    
 
     changePage(page:number){
         this.setState({
@@ -157,7 +155,7 @@ class TaskHistory extends React.Component<IProps,IState>{
     render(){
         const {activeTab,activeSearch} =  this.state
 
-        const searchComponent = activeSearch ? <Search className='search-input' onBlur={()=>this.onBlur()}  onSearch={value => this.search(value)}  /> : <Icon className='search' type="search" onClick={()=>this.toggleSearchCSS()}/>
+        const searchComponent = activeSearch ? <Search className='search-input'  onSearch={value => this.search(value)}  /> : <Icon className='search' type="search" onClick={()=>this.toggleSearchCSS()}/>
         
         return (
             <div id='taskHistory'>
@@ -168,10 +166,10 @@ class TaskHistory extends React.Component<IProps,IState>{
                         {searchComponent}
                     </div>
                     <div className='right-btn'>
-                        <RangePicker size='large' 
+                        <RangePicker 
                             format='YYYY-MM-DD' 
                             onChange={this.onChange}
-                            placeholder={['开始日期','结束日期']}
+                            locale={locale}
                             defaultValue={[moment('2019-04-01','YYYY-MM-DD'),moment('2019-05-01','YYYY-MM-DD')]}
                          />
                     </div>

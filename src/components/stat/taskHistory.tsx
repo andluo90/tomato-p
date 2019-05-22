@@ -35,7 +35,18 @@ class TaskHistory extends React.Component<IProps,IState>{
 
     get completedTodos(){
         // 获取已完成但未删除的任务列表,并且把时间格式化一下
-        const tmp = this.props.todos.filter((i)=>!i.deleted && i.completed)
+        const {activeTab} = this.state
+        const tmp = this.props.todos.filter((i)=>{
+              if(activeTab === 0){
+                if(!i.deleted && i.completed){
+                    return i;
+                }
+              }else {
+                if(i.deleted && i.completed){
+                    return i;
+                }
+              }  
+        })
 
         return tmp.map((i)=>{
             return {
@@ -48,10 +59,11 @@ class TaskHistory extends React.Component<IProps,IState>{
         })
     }
 
-    get completedTodoComponents(){
+    get TodoComponents(){
         // 获取已完成但未删除的任务列表组件
         const tmp:any =  _.groupBy(this.completedTodos,'completed_day')
         const keys = Object.keys(tmp)
+        keys.sort((a,b)=>new Date(b).getTime() - new Date(a).getTime() )
         const tmp2 = keys.map((i:any)=>{
             return (<li key={i}>
                 <div className="left">
@@ -78,12 +90,7 @@ class TaskHistory extends React.Component<IProps,IState>{
         return tmp2
     }
 
-    // get deletedTodos(){
-    //     // 获取已完成但已删除的任务列表
-    //     return this.props.todos.filter(i => i.deleted && i.completed)
-
-    // }
-
+    
 
     onChange(date:any, dateString:any){
         console.log(date, dateString)
@@ -109,7 +116,7 @@ class TaskHistory extends React.Component<IProps,IState>{
 
         const searchComponent = activeSearch ? <Search className='search-input'  onSearch={value => console.log(value)} /> : <Icon className='search' type="search" onClick={()=>this.clickSearch()}/>
         console.log('-----------')
-        console.log(this.completedTodoComponents)
+        console.log(this.TodoComponents)
         return (
             <div id='taskHistory'>
                 <div className='head'>
@@ -131,36 +138,13 @@ class TaskHistory extends React.Component<IProps,IState>{
 
                 <div className='main'>
                      <ul>
-                        {this.completedTodoComponents.map((item)=>{
+                        {this.TodoComponents.map((item)=>{
                             return item;
                         })}
-                        {/* <li>
-                            <div className="left">
-                                <div>5月21日 
-                                    <span className='day'>周二</span>
-                                </div>
-                                <div className='count'>完成了 2 个任务</div>
-                            </div>
-                            <div className="right">
-                                <ul className='list'>
-                                    <li className='list-item'>
-                                        <div>
-                                            <span className='time'>21:38</span>
-                                            豆瓣电影的JS文件太大
-                                        </div>
-                                    </li>
-                                    <li className='list-item'>
-                                        <div>
-                                            <span className='time'>16:13</span>
-                                             登录注册细节的优化
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li> */}
+                        
                     </ul> 
                 </div>
-                <Pagination defaultCurrent={1} total={50} />
+                <Pagination defaultCurrent={1} defaultPageSize={2} total={this.completedTodos.length} />
 
             </div>
         )

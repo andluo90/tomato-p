@@ -20,6 +20,7 @@ interface IProps {
 interface IState {
     activeTab:number
     activeSearch:boolean
+    searchKey:string
 }
 
 class TaskHistory extends React.Component<IProps,IState>{
@@ -29,24 +30,31 @@ class TaskHistory extends React.Component<IProps,IState>{
         super(props)
         this.state = {
             activeTab:0,
-            activeSearch:false
+            activeSearch:false,
+            searchKey:''
         }
     }
 
     get completedTodos(){
-        // 获取已完成但未删除的任务列表,并且把时间格式化一下
-        const {activeTab} = this.state
-        const tmp = this.props.todos.filter((i)=>{
-              if(activeTab === 0){
-                if(!i.deleted && i.completed){
+        // 获取已完成的任务列表,并且把时间格式化一下
+        const {activeTab,searchKey} = this.state
+        let tmp = null;
+        if(activeTab === 0){
+            tmp = this.props.todos.filter((i)=>{
+                if(!i.deleted && i.completed && i.description.search(searchKey)>=0){
                     return i;
                 }
-              }else {
-                if(i.deleted && i.completed){
+            })
+            
+        }else{
+            tmp = this.props.todos.filter((i)=>{
+                if(i.deleted && i.completed && i.description.search(searchKey)>=0){
                     return i;
                 }
-              }  
-        })
+            })
+            
+        }
+        
 
         return tmp.map((i)=>{
             return {
@@ -103,20 +111,29 @@ class TaskHistory extends React.Component<IProps,IState>{
         })
     }
 
-    clickSearch(){
-        // 点击搜索
+    toggleSearchCSS(){
+        // 
         this.setState({
             activeSearch:true
         })
+    }
+
+    search(value:string){
+        if(value !== this.state.searchKey){
+            console.log(`开始搜索 ${value}`)
+            this.setState({
+                searchKey:value
+            })
+        }
+        
     }
 
 
     render(){
         const {activeTab,activeSearch} =  this.state
 
-        const searchComponent = activeSearch ? <Search className='search-input'  onSearch={value => console.log(value)} /> : <Icon className='search' type="search" onClick={()=>this.clickSearch()}/>
-        console.log('-----------')
-        console.log(this.TodoComponents)
+        const searchComponent = activeSearch ? <Search className='search-input'  onSearch={value => this.search(value)}  /> : <Icon className='search' type="search" onClick={()=>this.toggleSearchCSS()}/>
+        
         return (
             <div id='taskHistory'>
                 <div className='head'>
@@ -144,7 +161,7 @@ class TaskHistory extends React.Component<IProps,IState>{
                         
                     </ul> 
                 </div>
-                <Pagination defaultCurrent={1} defaultPageSize={2} total={this.completedTodos.length} />
+                <Pagination defaultCurrent={1} defaultPageSize={2} total={this.completedTodos.length} hideOnSinglePage={true} />
 
             </div>
         )

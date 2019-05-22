@@ -1,6 +1,6 @@
 import * as React  from 'react'
 
-import {Button,Input,Icon,Spin} from 'antd'
+import {Button,Input,Icon,Spin,message} from 'antd'
 
 import axios from '../../config/axios'
 
@@ -55,24 +55,35 @@ export default class Login extends React.Component<{},IState>{
     }
 
     submit(){
-        this.setState({
-            loading:true
-        })
-        axios.post('sign_in/user',{
-            account:this.state.userName,
-            password:this.state.password
-        }).then((res:any)=>{
-            console.log("请求成功")
-            console.log(res) 
-            this.setState({
-                login_success:true
-            })
-            
 
-        }).catch((e:any)=>{
-            console.log("请求报错...")
-            console.log(e)
-        })
+        const {userName,password} = this.state
+
+        if(userName==='' || password===''){
+            message.warn('账号或密码不能为空.')
+        }else{
+            this.setState({
+                loading:true
+            })
+            axios.post('sign_in/user',{
+                account:this.state.userName,
+                password:this.state.password
+            }).then((res:any)=>{
+                console.log(res) 
+                this.setState({
+                    login_success:true
+                })
+                
+    
+            }).catch((e:any)=>{
+                console.log("请求报错...")
+                message.error('登录失败:账号或密码错误.')
+                this.setState({
+                    loading:false
+                })
+                console.log(e)
+            })
+        }
+        
     }
 
 

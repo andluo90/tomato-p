@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {Button,Input,Icon,Spin} from 'antd'
+import {Button,Input,Icon,Spin,message} from 'antd'
 
 
 import axios from '../../config/axios'
@@ -48,24 +48,32 @@ export default class Register extends React.Component<{},IState> {
     }
 
     submit(){
-        this.setState({
-            loading:true
-        })
-        console.log("开始注册...")
-        axios.post('sign_up/user',{
-            account:this.state.account,
-            password:this.state.password,
-            password_confirmation:this.state.password_confirmation
-        }).then((res)=>{
-            console.log('请求成功')
+        const {account,password,password_confirmation} = this.state
+        if(account==='' || password==='' || password_confirmation===''){
+            message.warn('账号或密码不能为空.')
+        }else{
             this.setState({
-                IsRegisterSuccess:true
+                loading:true
             })
-        }).catch((error)=>{
-            console.log('请求报错...')
-            console.log(error)
-        })
-        
+            console.log("开始注册...")
+            axios.post('sign_up/user',{
+                account:this.state.account,
+                password:this.state.password,
+                password_confirmation:this.state.password_confirmation
+            }).then((res)=>{
+                console.log('请求成功')
+                this.setState({
+                    IsRegisterSuccess:true
+                })
+            }).catch((error)=>{
+                console.log('请求报错...')
+                message.error('注册失败.')
+                this.setState({
+                    loading:false
+                })
+                console.log(error)
+            })
+        }
     }
 
     render(){

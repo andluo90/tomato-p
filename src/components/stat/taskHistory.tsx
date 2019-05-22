@@ -6,7 +6,7 @@ import locale from 'antd/lib/date-picker/locale/zh_CN';
 import moment from 'moment';
 
 import _ from 'lodash'
-import {format} from 'date-fns'
+import {format,subMonths,isWithinRange,addDays} from 'date-fns'
 
 import * as locale2 from 'date-fns/locale/zh_cn'
 
@@ -26,6 +26,8 @@ interface IState {
     searchKey:string
     currentPage:number
     pageSize:number
+    today:string
+    aMonthAgo:string
 }
 
 class TaskHistory extends React.Component<IProps,IState>{
@@ -38,29 +40,44 @@ class TaskHistory extends React.Component<IProps,IState>{
             activeSearch:false,
             searchKey:'',
             currentPage:1,
-            pageSize:2
+            pageSize:5,
+            today:format(new Date(),'YYYY-MM-DD'),
+            aMonthAgo:format(subMonths(new Date(),1),'YYYY-MM-DD')
         }
     }
 
     get completedTodos():any[]{
         // 获取已完成的任务列表,并且把时间格式化一下
-        const {activeTab,searchKey,currentPage,pageSize} = this.state
+        const {activeTab,searchKey,currentPage,pageSize,today,aMonthAgo} = this.state
+        const {todos} = this.props
         let tmp = null;
+        
+
+        // 过滤已完成或已删除的数据
         if(activeTab === 0){
-            tmp = this.props.todos.filter((i)=>{
+            tmp = todos.filter((i)=>{
                 if(!i.deleted && i.completed && i.description.search(searchKey)>=0){
-                    return i;
+                    // 根据时间过滤数据
+                    if (isWithinRange(i.completed_at,aMonthAgo,addDays(today,1))){
+                        return i
+                    }
                 }
             })
             
         }else{
-            tmp = this.props.todos.filter((i)=>{
-                if(i.deleted && i.completed && i.description.search(searchKey)>=0){
-                    return i;
+            tmp = todos.filter((i)=>{
+                if(i.deleted && i.description.search(searchKey)>=0){
+                    // 根据时间过滤数据
+                    if (isWithinRange(i.updated_at,aMonthAgo,addDays(today,1))){
+                        return i
+                    }
                 }
             })
             
         }
+
+        
+        
 
         // 根据页数获取对应的数据
         const totalCount = tmp.length
@@ -80,8 +97,17 @@ class TaskHistory extends React.Component<IProps,IState>{
     }
 
     get TodoComponents(){
-        // 获取已完成但未删除的任务列表组件
-        const tmp:any =  _.groupBy(this.completedTodos[0],'completed_day')
+        // 获取已完成/已删除的任务列表组件
+        let tmp:any = null
+        const {activeTab} = this.state
+        let desc:string = ''
+        if(activeTab === 0){
+            tmp =  _.groupBy(this.completedTodos[0],'completed_day')
+            desc = '完成'
+        }else {
+            tmp =  _.groupBy(this.completedTodos[0],'deleted_day')
+            desc = '删除'
+        }
         const keys = Object.keys(tmp)
         keys.sort((a,b)=>new Date(b).getTime() - new Date(a).getTime() )
         const tmp2 = keys.map((i:any)=>{
@@ -90,14 +116,14 @@ class TaskHistory extends React.Component<IProps,IState>{
                     <div>{format(i,'MM-DD')} 
                         <span className='day'>{format(i,'dddd',{locale:locale2})}</span>
                     </div>
-                    <div className='count'>完成了 {tmp[i].length} 个任务</div>
+                    <div className='count'>{`${desc}了${tmp[i].length} 个任务`}</div>
                 </div>
                 <div className="right">
                     <ul className='list'>
                         {tmp[i].map((j:any)=>{
                             return (<li key={j.id} className='list-item'>
                                 <div>
-                                    <span className='time'>{j.completed_time}</span>
+                                    <span className='time'>{activeTab === 0?j.completed_time:j.deleted_time}</span>
                                     {j.description}
                                 </div>
                             </li>)
@@ -112,8 +138,12 @@ class TaskHistory extends React.Component<IProps,IState>{
 
     
 
-    onChange(date:any, dateString:any){
-        console.log(date, dateString)
+    changeDate(date:any, dateString:any){
+        // 选择日期
+        this.setState({
+            aMonthAgo:dateString[0],
+            today:dateString[1]
+        })
     }
 
     clickTab(index:number){
@@ -156,7 +186,6 @@ class TaskHistory extends React.Component<IProps,IState>{
         const {activeTab,activeSearch} =  this.state
 
         const searchComponent = activeSearch ? <Search className='search-input'  onSearch={value => this.search(value)}  /> : <Icon className='search' type="search" onClick={()=>this.toggleSearchCSS()}/>
-        
         return (
             <div id='taskHistory'>
                 <div className='head'>
@@ -168,9 +197,10 @@ class TaskHistory extends React.Component<IProps,IState>{
                     <div className='right-btn'>
                         <RangePicker 
                             format='YYYY-MM-DD' 
-                            onChange={this.onChange}
+                            allowClear={false}
+                            onChange={(date,dateString)=>this.changeDate(date,dateString)}
                             locale={locale}
-                            defaultValue={[moment('2019-04-01','YYYY-MM-DD'),moment('2019-05-01','YYYY-MM-DD')]}
+                            defaultValue={[moment(this.state.aMonthAgo,'YYYY-MM-DD'),moment(this.state.today,'YYYY-MM-DD')]}
                          />
                     </div>
                     

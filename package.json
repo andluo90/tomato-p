@@ -17,7 +17,7 @@
   },
   "scripts": {
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -b master -d build",
     "start": "react-scripts-ts-antd start",
     "build": "react-scripts-ts-antd build",
     "test": "react-scripts-ts-antd test --env=jsdom",

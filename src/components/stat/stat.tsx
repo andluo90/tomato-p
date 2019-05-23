@@ -1,7 +1,5 @@
 import * as React from 'react'
 
-// import axios from '../../config/axios'
-
 import {connect} from 'react-redux'
 
 import './stat.scss'
@@ -66,6 +64,7 @@ class Stat extends React.Component<IProps,IState>{
                 activeState:tmp,
                 activeIndex:index
             })
+            this.scrollToBottom()
             
         }else {
             this.setState({
@@ -80,15 +79,16 @@ class Stat extends React.Component<IProps,IState>{
     }
 
     scrollToTop = () => {
-        // 缓慢滚动到顶
-        const c = document.documentElement!.scrollTop || document.body.scrollTop;
-        if (c > 0) {
-          window.requestAnimationFrame(this.scrollToTop);
-          window.scrollTo(0, c - c / 8);
-        }
+        
+        document.documentElement!.scrollTop = 0
     };
 
-    
+
+    scrollToBottom = ()=> {
+        setTimeout(()=>{
+            document.documentElement!.scrollTop = 400
+        },800)
+    }    
 
     
 

@@ -27,5 +27,5 @@ react/react-redux/create-react-app/ant-design/typescript/scss/grid/lodash/date-f
 ![1](/shortcut/shortcut1.png)
 ![2](/shortcut/shortcut2.png)
 ![3](/shortcut/shortcut3.png)
-![4](/shortcut/shortcut4.png)
 ![5](/shortcut/shortcut5.png)
+![6](/shortcut/shortcut6.png)

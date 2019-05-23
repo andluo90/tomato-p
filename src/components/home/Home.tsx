@@ -83,7 +83,7 @@ class Home extends React.Component<IProps,{}> {
     }
 
 
-
+    
     
 
     render(){
@@ -103,14 +103,7 @@ class Home extends React.Component<IProps,{}> {
                                                 deleted = {item.deleted}
                                                 IsEditing={updataingTodoId === item.id}  />)
                             })}
-                            {/* {this.completedTodos.map((item:any)=>{
-                                return (<TodoItem key={item.id}
-                                                id={item.id} 
-                                                description = {item.description}
-                                                completed = {item.completed}
-                                                deleted = {item.deleted}
-                                                IsEditing={updataingTodoId === item.id}  />)
-                            })} */}
+                            
                         </Todos>
                     </div>
                   

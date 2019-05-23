@@ -121,6 +121,8 @@ export default class Login extends React.Component<{},IState>{
                     <Button type='primary' onClick={this.submit} >登录</Button>
                 </Spin>
                 <span>Or <Link to='/register'>立即注册</Link></span>
+                <span> / <Link to='/'>首页</Link></span>
+
             </div>
         )
     }

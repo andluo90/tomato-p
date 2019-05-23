@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {Input,Icon,message} from 'antd'
+import {Input,Icon,message,Empty} from 'antd'
 
 import {connect} from  'react-redux'
 
@@ -54,6 +54,17 @@ class Todos extends React.Component<IProps,{}> {
         message.info("添加新任务成功!",2)
     }
 
+    get dataList(){
+        // 获取任务列表
+        const t = this.props.children as any[]
+        if( t.length !== 0){
+            return this.props.children
+        }else{
+            return (<Empty description='暂无任务数据.' />) 
+        }
+    }
+    
+
     render(){
         const { inputTaskName } = this.props;
         return (
@@ -65,7 +76,8 @@ class Todos extends React.Component<IProps,{}> {
                     onChange={(e:React.ChangeEvent<HTMLInputElement>)=>this.onChange(e)}
                     onKeyUp={(e:React.KeyboardEvent) =>this.onKeyUp(e)}
                 />
-                {this.props.children}
+                {/* {this.props.children} */}
+                {this.dataList}
             </div>
         )
     }

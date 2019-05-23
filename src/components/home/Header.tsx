@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom'
 import axios from '../../config/axios'
 
 import {connect} from 'react-redux'
+
 import { Menu, Dropdown, Button, Icon , message } from 'antd';
 
 
@@ -21,6 +22,7 @@ class Header extends React.Component<IProps>{
             localStorage.setItem('x-token','')
             this.props.logout()
             message.info('退出成功.',2);
+            
         }else if(e.key === '1'){
             message.warn('该功能暂未实现',2);
         }
@@ -42,7 +44,7 @@ class Header extends React.Component<IProps>{
 
     render(){
         const {account} = this.props
-
+        
         const menu = (
             <Menu onClick={(e)=>this.handleClick(e)}>
               <Menu.Item key="1"><Icon type="user" />偏好设置</Menu.Item>

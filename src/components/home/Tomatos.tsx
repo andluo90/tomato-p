@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {Button,Icon,Modal,Input,message} from 'antd'
+import {Button,Icon,Modal,Input,message,Empty} from 'antd'
 import {format} from 'date-fns'
 
 import {groupBy} from 'lodash'
@@ -177,14 +177,31 @@ class Tomatos extends React.Component<IProps,IState>{
         }
 
     }
+
+    get dataList(){
+        // 要展示的数据列表
+        const obj = this.groupByList
+        const keys = Object.keys(obj)
+        if(keys.length !== 0){
+            keys.sort((a,b)=>new Date(b).getTime() - new Date(a).getTime())
+             
+            return  (keys.map((key:string)=>{
+                    return (
+                        <TomatoItem key={key} date={key} data={obj[key]} />
+                    )
+                }))
+        }else {
+            return <Empty description='暂无番茄数据.' />
+        }
+
+    }
     
     
 
     render(){
-        console.log(`render....`)
-        const obj = this.groupByList
-        const keys = Object.keys(obj)
-        keys.sort((a,b)=>new Date(b).getTime() - new Date(a).getTime())
+        // const obj = this.groupByList
+        // const keys = Object.keys(obj)
+        // keys.sort((a,b)=>new Date(b).getTime() - new Date(a).getTime())
         let component = null
 
         const {status} = this.state
@@ -220,11 +237,12 @@ class Tomatos extends React.Component<IProps,IState>{
                 <div className='tomatoWrapper'>
                     {component}
                 </div>
-                {keys.map((key:string)=>{
+                {this.dataList}
+                {/* {keys.map((key:string)=>{
                     return (
                         <TomatoItem key={key} date={key} data={obj[key]} />
                     )
-                })}
+                })} */}
 
             </div>
             

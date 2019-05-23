@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import {Icon,DatePicker,Input,Pagination} from 'antd'
+import {Icon,DatePicker,Input,Pagination,Empty} from 'antd'
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 
 import moment from 'moment';
@@ -96,7 +96,7 @@ class TaskHistory extends React.Component<IProps,IState>{
         return [tmp2,totalCount]
     }
 
-    get TodoComponents(){
+    get todoComponents(){
         // 获取已完成/已删除的任务列表组件
         let tmp:any = null
         const {activeTab} = this.state
@@ -179,6 +179,21 @@ class TaskHistory extends React.Component<IProps,IState>{
         })
     }
 
+    get dataList(){
+        // 要展示的数据列表
+        const isEmpty = this.todoComponents.length === 0 ? true:false
+        if(isEmpty){
+            return (<Empty description='暂无任务历史.' />)
+        }else {
+            return (
+                <ul>
+                    {this.todoComponents.map((item)=>{
+                        return item;
+                    })}
+                </ul> )
+        }
+    }
+
     
 
 
@@ -207,12 +222,7 @@ class TaskHistory extends React.Component<IProps,IState>{
                 </div>
 
                 <div className='main'>
-                     <ul>
-                        {this.TodoComponents.map((item)=>{
-                            return item;
-                        })}
-                        
-                    </ul> 
+                     {this.dataList}
                 </div>
                 <Pagination 
                     current = {this.state.currentPage}

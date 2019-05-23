@@ -107,6 +107,8 @@ export default class Register extends React.Component<{},IState> {
                     <Button type='primary' onClick={this.submit}>注册</Button>
                 </Spin>
                 <span>Or <Link to='/login'>立即登录</Link></span>
+                <span> / <Link to='/'>首页</Link></span>
+
             </div>
         )
     }

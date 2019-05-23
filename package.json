@@ -2,7 +2,7 @@
   "name": "tomato-app2",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://andluo90.github.io/tomato-p/",
+  "homepage": "https://andluo90.github.io/tomato-p",
   "dependencies": {
     "antd": "^3.15.2",
     "axios": "^0.18.0",

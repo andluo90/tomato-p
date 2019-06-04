@@ -1,6 +1,7 @@
 import * as React from 'react'
-
 import {connect} from 'react-redux'
+
+
 
 import './stat.scss'
 
@@ -16,13 +17,19 @@ interface IProps {
 interface IState {
     activeState:any,
     activeIndex:number
+    
 }
 
 // 统计组件
 
 class Stat extends React.Component<IProps,IState>{
+
+    // private myRef:React.RefObject<HTMLInputElement>
+
+    
     constructor(props:any){
         super(props)
+        // this.myRef = React.createRef()
         this.state = {
             activeIndex : -1,
             activeState : ['','','','']
@@ -64,7 +71,7 @@ class Stat extends React.Component<IProps,IState>{
                 activeState:tmp,
                 activeIndex:index
             })
-            this.scrollToBottom()
+            // this.scrollToBottom()
             
         }else {
             this.setState({
@@ -84,11 +91,13 @@ class Stat extends React.Component<IProps,IState>{
     };
 
 
-    scrollToBottom = ()=> {
-        setTimeout(()=>{
-            document.documentElement!.scrollTop = 400
-        },800)
-    }    
+    // scrollToBottom = ()=> {
+        
+    //     console.log(this.myRef)
+    //     setTimeout(()=>{
+    //         document.documentElement!.scrollTop = 900
+    //     },800)
+    // }    
 
     
 
@@ -123,7 +132,7 @@ class Stat extends React.Component<IProps,IState>{
                         <div className='title2'>累计完成番茄</div>
                         <div className='count'>{this.CompletedTomatos.length}</div>
                     </li>
-                    <li className={activeState[3]} onClick={()=>this.click(3)}>
+                    <li className={activeState[3]}  onClick={()=>this.click(3)} >
                         <div className='title'>任务历史</div>
                         <div className='title2'>累计完成历史</div>
                         <div className='count'>

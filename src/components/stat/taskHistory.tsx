@@ -40,7 +40,7 @@ class TaskHistory extends React.Component<IProps,IState>{
             activeSearch:false,
             searchKey:'',
             currentPage:1,
-            pageSize:5,
+            pageSize:20,
             today:format(new Date(),'YYYY-MM-DD'),
             aMonthAgo:format(subMonths(new Date(),1),'YYYY-MM-DD')
         }
